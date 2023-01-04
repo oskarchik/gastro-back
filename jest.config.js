@@ -3,7 +3,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   coverageDirectory: 'coverage',
-  collectCoverageFrom: ['src/**/*.{js|ts}'],
+  collectCoverageFrom: ['src/**/*.{js,ts}'],
   coverageThreshold: {
     global: {
       branches: 0,
@@ -15,6 +15,7 @@ module.exports = {
   moduleNameMapper: {
     'src/(.*)': '<rootDir>/src/$1',
   },
-  moduleDirectories: ['node_modules', 'src'],
-  modulePathIgnorePatterns: ['<rootDir>/build'],
+  modulePathIgnorePatterns: ['<rootDir>/build', '<rootDir>/config'],
+  forceExit: true,
+  testTimeout: 10000,
 };

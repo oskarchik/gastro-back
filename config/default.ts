@@ -1,7 +1,4 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
 export default {
-  port: process.env.PORT || 5000,
-  db_uri: '',
+  port: 'port',
+  db_uri: 'db_uri',
 };

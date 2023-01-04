@@ -89,3 +89,27 @@ describe('error handler', () => {
     expect(mockNext).not.toHaveBeenCalled();
   });
 });
+
+describe('isTrustedError', () => {
+  it('should return true if error is instance of BaseError', () => {
+    const error = ApiError.badRequest('fake error');
+
+    const result = isTrustedError(error);
+
+    expect(result).toBe(true);
+    expect(error.isOperational).toBe(true);
+    expect(error.httpCode).toBe(400);
+    expect(error.message).toMatch(/fake error/i);
+  });
+
+  it('should return false is error is not instance of BaseError', () => {
+    const error = new Error('fake error');
+
+    const result = isTrustedError(error);
+
+    expect(result).toBe(false);
+    expect(error).not.toEqual(expect.objectContaining({ isOperational: false }));
+    expect(error).not.toEqual(expect.objectContaining({ httpCode: 500 }));
+    expect(error.message).toMatch(/fake error/i);
+  });
+});

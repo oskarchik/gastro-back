@@ -4,6 +4,7 @@ import cors from 'cors';
 import { httpLogger } from './logger/httpLogger';
 import { Logger } from './logger/logger';
 import { errorHandler, isTrustedError } from './error/error-handler';
+import { apiRouter } from './routes';
 
 export const createApp = () => {
   const app = express();
@@ -14,9 +15,9 @@ export const createApp = () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(httpLogger);
 
-  app.get('/', (_req: Request, res: Response, next: NextFunction) => {
-    return res.send('hello');
-  });
+  // app.get('/', (_req: Request, res: Response, next: NextFunction) => {
+  //   return res.send('hello');
+  // });
   app.get('/health', (_req: Request, res: Response) => {
     const data = {
       uptime: process.uptime(),
@@ -26,6 +27,8 @@ export const createApp = () => {
     };
     return res.status(200).send(data);
   });
+
+  app.use('/api/v1', apiRouter);
 
   app.use(errorHandler);
 
