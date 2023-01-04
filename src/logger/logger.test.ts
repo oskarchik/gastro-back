@@ -30,6 +30,7 @@ import { Logger } from './logger';
 
 describe('logger', () => {
   afterEach(() => {
+    jest.clearAllMocks();
     jest.resetAllMocks();
   });
   it('should pass', () => {
