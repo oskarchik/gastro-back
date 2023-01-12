@@ -10,7 +10,7 @@ const app = createApp();
 
 const ingredientInput: IngredientInput = {
   name: 'ingredient 1',
-  category: 'category 1',
+  category: 'eggs',
   hasAllergens: true,
   allergens: ['639eea5a049fc933bddebab3'],
   allergenNames: ['celery'],
@@ -19,7 +19,7 @@ const ingredientInput: IngredientInput = {
 const ingredientPayload = {
   _id: '639eea5a049fc933bddebab2',
   name: 'ingredient 1',
-  category: 'category 1',
+  category: 'eggs',
   hasAllergens: true,
   allergens: ['639eea5a049fc933bddebab3'],
   allergenNames: ['celery'],
@@ -84,7 +84,6 @@ describe('HAPPY PATH', () => {
       expect(body.data.length).toBe(1);
       expect(getIngredientsServiceMock).toHaveBeenNthCalledWith(1, {
         name: ingredientInput.name,
-        hasAllergens: false,
       });
     });
   });
@@ -93,16 +92,13 @@ describe('HAPPY PATH', () => {
       // @ts-ignore
       getIngredientsServiceMock.mockReturnValueOnce([ingredientPayload]);
 
-      const { statusCode, body } = await request(app)
-        .get(baseApiUrl)
-        .query({ category: 'category 1' });
+      const { statusCode, body } = await request(app).get(baseApiUrl).query({ category: 'eggs' });
 
       expect(statusCode).toBe(200);
       expect(body.data).toBeInstanceOf(Array);
       expect(body.data.length).toBe(1);
       expect(getIngredientsServiceMock).toHaveBeenNthCalledWith(1, {
         category: ingredientInput.category,
-        hasAllergens: false,
       });
     });
   });
@@ -166,6 +162,49 @@ describe('UNHAPPY PATH', () => {
       expect(body.error).toBeTruthy();
       expect(body.error).toMatch(/unexpected internal error/i);
       expect(getIngredientsServiceMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('should return 500 if error while getting ingredients by allergen', async () => {
+    // @ts-ignore
+    getIngredientsByAllergenServiceMock.mockRejectedValueOnce('oh no!');
+
+    const { statusCode, body } = await request(app)
+      .get(baseApiUrl)
+      .query({ allergenNames: 'mustard' });
+
+    expect(statusCode).toBe(500);
+    expect(body.error).toMatch(/unexpected internal error/i);
+    expect(getIngredientsByAllergenServiceMock).toHaveBeenCalledTimes(1);
+  });
+  describe('invalid id while getting ingredients by id', () => {
+    it('should return 400 error', async () => {
+      // @ts-ignore
+      getIngredientByIdServiceMock.mockReturnValueOnce(ingredientPayload);
+      const { statusCode, body } = await request(app).get(`${baseApiUrl}/12324`);
+
+      expect(statusCode).toBe(400);
+      expect(body.error).toMatch(/invalid id/i);
+      expect(getIngredientByIdServiceMock).not.toHaveBeenCalled();
+    });
+  });
+  describe('ingredient by id not found', () => {
+    it('should return 404', async () => {
+      const { statusCode, body } = await request(app).get(`${baseApiUrl}/639eea5a049fc933bddebab3`);
+
+      expect(statusCode).toBe(404);
+      expect(body.error).toMatch(/ingredient not found/i);
+      expect(getIngredientByIdServiceMock).toHaveBeenNthCalledWith(1, '639eea5a049fc933bddebab3');
+    });
+    it('should return 500 if unexpected error occurs', async () => {
+      // @ts-ignore
+      getIngredientByIdServiceMock.mockRejectedValueOnce('ooops');
+
+      const { statusCode, body } = await request(app).get(`${baseApiUrl}/${ingredientPayload._id}`);
+
+      expect(statusCode).toBe(500);
+      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(getIngredientByIdServiceMock).toHaveBeenNthCalledWith(1, ingredientPayload._id);
     });
   });
 });
