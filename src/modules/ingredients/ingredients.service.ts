@@ -1,7 +1,7 @@
 import { FilterQuery } from 'mongoose';
 import { IngredientModel, IngredientDocument, IngredientInput } from './ingredients.model';
 
-const fieldsToReturn = '_id name category hasAllergens allergensNames allergens';
+const fieldsToReturn = '_id name category hasAllergens allergenNames allergens';
 
 export const getIngredients = async (query: FilterQuery<IngredientInput>) => {
   try {
@@ -18,31 +18,6 @@ export const getIngredientById = async (id: IngredientDocument['_id']) => {
     return error;
   }
 };
-
-// export const getIngredientsByName = async (ingredientName: IngredientDocument['name']) => {
-//   try {
-//     return await IngredientModel.find({ name: ingredientName }).select(fieldsToReturn);
-//   } catch (error) {
-//     return error;
-//   }
-// };
-
-// export const getIngredientsByCategory = async (category: IngredientDocument['category']) => {
-//   try {
-//     return await IngredientModel.find({ category }).select(fieldsToReturn);
-//   } catch (error) {
-//     return error;
-//   }
-// };
-// export const getAllergenicIngredients = async (
-//   hasAllergens: IngredientDocument['hasAllergens']
-// ) => {
-//   try {
-//     return await IngredientModel.find({ hasAllergens }).select(fieldsToReturn);
-//   } catch (error) {
-//     return error;
-//   }
-// };
 
 export const getIngredientsByAllergen = async (allergens: FilterQuery<IngredientInput>) => {
   try {
@@ -84,27 +59,10 @@ export const removeIngredientById = async (id: IngredientDocument['_id']) => {
   }
 };
 
-export const removeAllIngredients = async () => {
+export const removeAllIngredients = async (query: FilterQuery<IngredientInput>) => {
   try {
-    return await IngredientModel.deleteMany({});
-  } catch (error) {
-    return error;
-  }
-};
-
-export const removeIngredientsByCategory = async (category: IngredientDocument['category']) => {
-  try {
-    return await IngredientModel.deleteMany({ category });
-  } catch (error) {
-    return error;
-  }
-};
-
-export const removeAllergenicIngredients = async (
-  hasAllergens: IngredientDocument['hasAllergens']
-) => {
-  try {
-    return await IngredientModel.deleteMany({ hasAllergens });
+    const deletedIngredients = await IngredientModel.deleteMany(query);
+    return deletedIngredients.deletedCount;
   } catch (error) {
     return error;
   }
