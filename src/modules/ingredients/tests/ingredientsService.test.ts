@@ -3,17 +3,12 @@
 
 import {
   createIngredient,
-  // getAllergenicIngredients,
   getIngredientById,
-  //   getIngredientsByName,
   getIngredients,
   getIngredientsByAllergen,
-  // getIngredientsByCategory,
   removeAllIngredients,
-  removeAllergenicIngredients,
   removeIngredientById,
   removeIngredientsByAllergen,
-  removeIngredientsByCategory,
   updateIngredient,
 } from '../ingredients.service';
 import { IngredientInput, IngredientModel } from '../ingredients.model';
@@ -36,19 +31,31 @@ const ingredientPayload = {
   allergens: ['allergen1'],
 };
 
-beforeEach(() => {
+afterEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
 });
 
+const createIngredientSpy = jest.spyOn(IngredientModel, 'create');
+const removeAllIngredientsSpy = jest.spyOn(IngredientModel, 'deleteMany');
+const removeIngredientByIdSpy = jest.spyOn(IngredientModel, 'findByIdAndDelete');
+
 describe('ingredients service', () => {
   describe('createIngredient', () => {
     it('should call ingredientModel.create with given ingredient input', async () => {
-      const createIngredientSpy = jest.spyOn(IngredientModel, 'create');
-
       await createIngredient(ingredientInput);
 
       expect(createIngredientSpy).toHaveBeenNthCalledWith(1, ingredientInput);
+    });
+    it('should handle error when creating ingredient', async () => {
+      // @ts-ignore
+      createIngredientSpy.mockRejectedValue(new Error('oh no!'));
+
+      const result = await createIngredient(ingredientInput);
+
+      expect(createIngredientSpy).toHaveBeenNthCalledWith(1, ingredientInput);
+      // @ts-ignore
+      expect(result.message).toEqual('oh no!');
     });
   });
 
@@ -118,9 +125,7 @@ describe('ingredients service', () => {
 
   describe('removeAllIngredients', () => {
     it('should call ingredientModel.deleteMany ', async () => {
-      const removeAllIngredientsSpy = jest.spyOn(IngredientModel, 'deleteMany');
-
-      await removeAllIngredients();
+      await removeAllIngredients({});
 
       expect(removeAllIngredientsSpy).toHaveBeenCalledTimes(1);
     });
@@ -128,18 +133,20 @@ describe('ingredients service', () => {
 
   describe('removeAllAllergenicIngredients', () => {
     it('should call ingredientModel.deleteMany with given allergenic property ', async () => {
-      const removeAllergenicIngredientsSpy = jest.spyOn(IngredientModel, 'deleteMany');
+      await removeAllIngredients({ hasAllergens: true });
 
-      await removeAllergenicIngredients(true);
-
-      expect(removeAllergenicIngredientsSpy).toHaveBeenNthCalledWith(1, { hasAllergens: true });
+      expect(removeAllIngredientsSpy).toHaveBeenNthCalledWith(1, { hasAllergens: true });
     });
   });
 
   describe('removeIngredientById', () => {
     it('should call ingredientModel.findByIdAndDelete with given ingredient id ', async () => {
-      const removeIngredientByIdSpy = jest.spyOn(IngredientModel, 'findByIdAndDelete');
+      await removeIngredientById(ingredientPayload._id);
 
+      expect(removeIngredientByIdSpy).toHaveBeenNthCalledWith(1, ingredientPayload._id);
+    });
+    it('should handle error when deleting ingredient by id', async () => {
+      removeIngredientByIdSpy.mockRejectedValueOnce('oh no!');
       await removeIngredientById(ingredientPayload._id);
 
       expect(removeIngredientByIdSpy).toHaveBeenNthCalledWith(1, ingredientPayload._id);
@@ -148,11 +155,18 @@ describe('ingredients service', () => {
 
   describe('removeIngredientsByAllergen', () => {
     it('should call ingredientModel.deleteMany with given allergen name ', async () => {
-      const removeIngredientsByAllergenSpy = jest.spyOn(IngredientModel, 'deleteMany');
+      await removeIngredientsByAllergen(ingredientInput.allergens);
+
+      expect(removeAllIngredientsSpy).toHaveBeenNthCalledWith(1, {
+        allergens: { $in: ingredientInput.allergens },
+      });
+    });
+    it('should handle error when deleting ingredients by allergen', async () => {
+      removeAllIngredientsSpy.mockRejectedValueOnce('oh no!!');
 
       await removeIngredientsByAllergen(ingredientInput.allergens);
 
-      expect(removeIngredientsByAllergenSpy).toHaveBeenNthCalledWith(1, {
+      expect(removeAllIngredientsSpy).toHaveBeenNthCalledWith(1, {
         allergens: { $in: ingredientInput.allergens },
       });
     });
@@ -160,11 +174,9 @@ describe('ingredients service', () => {
 
   describe('removeIngredientsByCategory', () => {
     it('should call ingredientModel.deleteMany with given category name ', async () => {
-      const removeIngredientsByCategorySpy = jest.spyOn(IngredientModel, 'deleteMany');
+      await removeAllIngredients({ category: ingredientInput.category });
 
-      await removeIngredientsByCategory(ingredientInput.category);
-
-      expect(removeIngredientsByCategorySpy).toHaveBeenNthCalledWith(1, {
+      expect(removeAllIngredientsSpy).toHaveBeenNthCalledWith(1, {
         category: ingredientInput.category,
       });
     });
