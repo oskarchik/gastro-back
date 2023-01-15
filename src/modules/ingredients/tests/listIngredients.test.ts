@@ -3,7 +3,7 @@
 
 import request from 'supertest';
 import * as IngredientsService from '../ingredients.service';
-import { IngredientDocument, IngredientInput } from '../ingredients.model';
+import { IngredientInput } from '../ingredients.model';
 import { createApp } from '../../../app';
 
 const app = createApp();

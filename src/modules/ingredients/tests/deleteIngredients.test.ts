@@ -3,18 +3,9 @@
 
 import request from 'supertest';
 import * as IngredientsService from '../ingredients.service';
-import { IngredientDocument, IngredientInput } from '../ingredients.model';
 import { createApp } from '../../../app';
 
 const app = createApp();
-
-const ingredientInput: IngredientInput = {
-  name: 'ingredient 1',
-  category: 'eggs',
-  hasAllergens: true,
-  allergens: ['639eea5a049fc933bddebab3'],
-  allergenNames: ['celery'],
-};
 
 const ingredientPayload = {
   _id: '639eea5a049fc933bddebab2',

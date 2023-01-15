@@ -1,21 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable import/no-extraneous-dependencies */
 
-import { STATUS_CODES } from 'http';
 import request from 'supertest';
 import { createApp } from '../../../app';
-import { IngredientInput } from '../ingredients.model';
 import * as IngredientService from '../ingredients.service';
 
 const app = createApp();
-
-const ingredientInput: IngredientInput = {
-  name: 'ingredient 1',
-  category: 'eggs',
-  hasAllergens: true,
-  allergens: ['639eea5a049fc933bddebab3'],
-  allergenNames: ['celery'],
-};
 
 const ingredientPayload = {
   _id: '639eea5a049fc933bddebab2',
