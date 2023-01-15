@@ -1,15 +1,5 @@
 import { Router } from 'express';
 import {
-  getAllergens,
-  getAllergenById,
-  getAllergensByName,
-  createAllergen,
-  updateAllergen,
-  removeAllergenById,
-  removeAllergenByName,
-  removeAllAllergens,
-} from './allergens.service';
-import {
   findAllergens,
   findAllergenById,
   makeAllergen,

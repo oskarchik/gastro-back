@@ -31,7 +31,7 @@ describe('HAPPY PATH', () => {
 
       expect(statusCode).toBe(200);
       expect(body.data).toBeInstanceOf(Array);
-      expect(getAllergenServiceMock).toBeCalledTimes(1);
+      expect(getAllergenServiceMock).toHaveBeenCalledTimes(1);
     });
   });
 
