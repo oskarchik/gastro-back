@@ -7,16 +7,25 @@ import {
   deleteAllAllergens,
   deleteAllergenById,
 } from './allergens.controller';
+import { validate } from 'src/middlewares/validationRequest';
+import {
+  getAllergensByIdSchema,
+  getAllergenSchema,
+  creteAllergenSchema,
+  updateAllergenSchema,
+  deleteAllergenSchema,
+  deleteAllergenByIdSchema,
+} from './allergens.schema';
 
 export const allergensRouter = Router();
 
-allergensRouter.get('/:id', findAllergenById);
-allergensRouter.get('/', findAllergens);
+allergensRouter.get('/:id', validate(getAllergensByIdSchema), findAllergenById);
+allergensRouter.get('/', validate(getAllergenSchema), findAllergens);
 
-allergensRouter.post('/', makeAllergen);
+allergensRouter.post('/', validate(creteAllergenSchema), makeAllergen);
 
-allergensRouter.patch('/:id', patchAllergen);
+allergensRouter.patch('/:id', validate(updateAllergenSchema), patchAllergen);
 
-allergensRouter.delete('/', deleteAllAllergens);
-allergensRouter.delete('/:id', deleteAllergenById);
+allergensRouter.delete('/', validate(deleteAllergenSchema), deleteAllAllergens);
+allergensRouter.delete('/:id', validate(deleteAllergenByIdSchema), deleteAllergenById);
 // allergensRouter.delete('/:name', removeAllergenByName);

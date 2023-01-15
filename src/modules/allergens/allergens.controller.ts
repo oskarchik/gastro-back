@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
+import { isValidId } from 'src/utils/idValidation';
 import { ApiError } from '../../error/ApiError';
 import {
   getAllergens,
@@ -39,7 +40,7 @@ export const findAllergens = async (req: Request, res: Response, next: NextFunct
 export const findAllergenById = async (req: Request, res: Response, next: NextFunction) => {
   const allergenId = req.params.id;
 
-  if (!mongoose.Types.ObjectId.isValid(allergenId)) {
+  if (!isValidId(allergenId)) {
     return next(ApiError.badRequest('Invalid id'));
   }
 
