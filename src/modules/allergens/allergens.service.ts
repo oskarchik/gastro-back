@@ -1,7 +1,7 @@
 import { FilterQuery } from 'mongoose';
 import { AllergenModel, AllergenDocument, AllergenInput } from './allergens.model';
 
-const fieldsToReturn = '_id name icon createdAt updatedAt';
+const fieldsToReturn = '_id name icon';
 
 export const getAllergens = async (query: FilterQuery<AllergenInput>) => {
   try {
