@@ -16,11 +16,12 @@ import {
   deleteAllergenSchema,
   deleteAllergenByIdSchema,
 } from './allergens.schema';
+import { cache } from 'src/middlewares/cache.middleware';
 
 export const allergensRouter = Router();
 
-allergensRouter.get('/:id', validate(getAllergensByIdSchema), findAllergenById);
-allergensRouter.get('/', validate(getAllergenSchema), findAllergens);
+allergensRouter.get('/:id', validate(getAllergensByIdSchema), cache, findAllergenById);
+allergensRouter.get('/', validate(getAllergenSchema), cache, findAllergens);
 
 allergensRouter.post('/', validate(creteAllergenSchema), makeAllergen);
 

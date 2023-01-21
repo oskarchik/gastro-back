@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { isValidId } from 'src/utils/idValidation';
 import { ApiError } from '../../error/ApiError';
+import { redis } from 'src/utils/redis';
 import {
   getAllergens,
   getAllergenById,
@@ -31,6 +32,7 @@ export const findAllergens = async (req: Request, res: Response, next: NextFunct
   try {
     const foundAllergens = await getAllergens(query);
 
+    redis.setex(`allergens`, 3600, JSON.stringify(foundAllergens));
     return res.status(200).send({ data: foundAllergens });
   } catch (error) {
     return next(error);
@@ -50,6 +52,8 @@ export const findAllergenById = async (req: Request, res: Response, next: NextFu
     if (!foundAllergen) {
       return next(ApiError.notFound('Allergen not found'));
     }
+
+    redis.setex(`allergens_${allergenId}`, 3600, JSON.stringify(foundAllergen));
     return res.status(200).send({ data: foundAllergen });
   } catch (error) {
     return next(error);
