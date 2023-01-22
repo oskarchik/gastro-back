@@ -16,11 +16,12 @@ import {
   getIngredientSchema,
   updateIngredientSchema,
 } from './ingredients.schema';
+import { cache } from 'src/middlewares/cache.middleware';
 
 export const ingredientsRouter = Router();
 
-ingredientsRouter.get('/', validate(getIngredientSchema), findIngredients);
-ingredientsRouter.get('/:id', validate(getIngredientByIdSchema), findIngredientById);
+ingredientsRouter.get('/', validate(getIngredientSchema), cache, findIngredients);
+ingredientsRouter.get('/:id', validate(getIngredientByIdSchema), cache, findIngredientById);
 
 ingredientsRouter.post('/', validate(createIngredientSchema), makeIngredient);
 
