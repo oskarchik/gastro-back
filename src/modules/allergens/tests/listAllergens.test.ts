@@ -2,6 +2,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import request from 'supertest';
+import { redis } from 'src/utils/redis';
 import { createApp } from '../../../app';
 import * as AllergenService from '../allergens.service';
 
@@ -17,9 +18,10 @@ const getAllergenServiceMock = jest.spyOn(AllergenService, 'getAllergens');
 const getAllergenByNameServiceMock = jest.spyOn(AllergenService, 'getAllergensByName');
 const getAllergenByIdServiceMock = jest.spyOn(AllergenService, 'getAllergenById');
 
-beforeEach(() => {
+afterEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
+  redis.flushdb();
 });
 
 describe('HAPPY PATH', () => {

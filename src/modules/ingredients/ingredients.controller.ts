@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { filterProperties } from 'src/utils/filterProperties';
 import { isValidId } from 'src/utils/idValidation';
 import { ApiError } from '../../error/ApiError';
+import { redis } from 'src/utils/redis';
 import {
   getIngredients,
   getIngredientById,
@@ -25,15 +26,25 @@ export const findIngredients = async (req: Request, res: Response, next: NextFun
     try {
       const foundIngredients = await getIngredientsByAllergen(parsedNames);
 
+      redis.setex(`ingredients_allergen_${parsedNames}`, 3600, JSON.stringify(foundIngredients));
+
       return res.status(200).send({ data: foundIngredients });
     } catch (error) {
       return next(error);
     }
   }
   try {
-    const result = await getIngredients(filteredQuery);
+    const foundIngredients = await getIngredients(filteredQuery);
 
-    return res.status(200).send({ data: result });
+    Object.keys(filteredQuery).length > 0
+      ? redis.setex(
+          `ingredients_${Object.keys(filteredQuery)}`,
+          3600,
+          JSON.stringify(foundIngredients)
+        )
+      : redis.setex('ingredients', 3600, JSON.stringify(foundIngredients));
+
+    return res.status(200).send({ data: foundIngredients });
   } catch (error) {
     return next(error);
   }
@@ -52,6 +63,8 @@ export const findIngredientById = async (req: Request, res: Response, next: Next
     if (!foundIngredient) {
       return next(ApiError.notFound('Ingredient not found'));
     }
+
+    redis.setex(`ingredients_${ingredientId}`, 3600, JSON.stringify(foundIngredient));
 
     return res.status(200).send({ data: foundIngredient });
   } catch (error) {

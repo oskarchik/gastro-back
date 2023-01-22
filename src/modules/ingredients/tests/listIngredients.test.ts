@@ -5,6 +5,7 @@ import request from 'supertest';
 import * as IngredientsService from '../ingredients.service';
 import { IngredientInput } from '../ingredients.model';
 import { createApp } from '../../../app';
+import { redis } from 'src/utils/redis';
 
 const app = createApp();
 
@@ -39,6 +40,7 @@ const getIngredientByIdServiceMock = jest.spyOn(IngredientsService, 'getIngredie
 beforeEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
+  redis.flushdb();
 });
 
 describe('HAPPY PATH', () => {
