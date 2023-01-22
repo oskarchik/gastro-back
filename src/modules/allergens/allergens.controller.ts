@@ -24,6 +24,9 @@ export const findAllergens = async (req: Request, res: Response, next: NextFunct
       if (!foundAllergens) {
         return next(ApiError.notFound('not allergen found with given name'));
       }
+
+      redis.setex(`allergens_${allergenName}`, 3600, JSON.stringify(foundAllergens));
+
       return res.status(200).send({ data: foundAllergens });
     } catch (error) {
       return next(error);
@@ -33,6 +36,7 @@ export const findAllergens = async (req: Request, res: Response, next: NextFunct
     const foundAllergens = await getAllergens(query);
 
     redis.setex(`allergens`, 3600, JSON.stringify(foundAllergens));
+
     return res.status(200).send({ data: foundAllergens });
   } catch (error) {
     return next(error);
