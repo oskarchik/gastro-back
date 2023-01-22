@@ -1,13 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { redis } from 'src/utils/redis';
+import { createRedisKey } from 'src/utils/redisKey';
 
 export const cache = async (req: Request, res: Response, next: NextFunction) => {
-  const getRouter = (baseUrl: string) => baseUrl.split('/').pop() as string;
-
-  const router = getRouter(req.baseUrl);
-  const { id } = req.params;
-
-  const key: string = id ? `${router}_${id}` : router;
+  const key = createRedisKey(req);
 
   try {
     const cachedResult = await redis.get(key);
