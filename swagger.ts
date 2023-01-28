@@ -1,8 +1,8 @@
 import { Express, Request, Response } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { version } from './package.json';
 import { Logger } from 'src/logger/logger';
+import { version } from './package.json';
 
 const options = {
   definition: {
