@@ -1,0 +1,188 @@
+paths:
+  /api/v1/ingredients:
+    get:
+      tags:
+        - Ingredients
+      summary: get all ingredients
+      description: get all ingredients according to some parameters
+      parameters:
+        - in: query
+          name: name
+          tape: string
+          description: Name of the ingredients
+        - in: query
+          name: category
+          tape: string
+          description: Category of the ingredients
+        - in: query
+          name: hasAllergens
+          tape: boolean
+          description: Ingredients have allergens or not
+        - in: query
+          name: allergenNames
+          type: array
+          items:
+            type: string
+          description: List of allergens names
+      responses:
+        200:
+          description: An array of ingredients filtered by query string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#components/schemas/IngredientResponse'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+    post:
+      tags:
+        - Ingredients
+      summary: create a new ingredient
+      description: creates a new ingredient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIngredientInput'
+
+      responses:
+        200:
+          description: An object with an ingredient detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#components/schemas/IngredientResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+    delete:
+      tags:
+        - Ingredients
+      summary: delete all the ingredients according a parameter
+      parameters:
+        - in: query
+          name: name
+          tape: string
+          description: Name of the ingredient
+        - in: query
+          name: category
+          tape: string
+          description: Category of the ingredients
+        - in: query
+          name: hasAllergens
+          tape: boolean
+          description: Ingredients have allergens or not
+        - in: query
+          name: allergenNames
+          type: array
+          items:
+            type: string
+          description: List of allergens names
+      responses:
+        200:
+          description: Return string with number of ingredients deleted
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+  /api/v1/ingredients/{id}:
+    get:
+      tags:
+        - Ingredients
+      summary: get one ingredient by id
+      description: get ingredient by its id
+      parameters:
+        - name: id
+          in: path
+          description: path parameter takes the ingredient id
+          required: true
+          type: string
+      responses:
+        200:
+          description: An object with an ingredient detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#components/schemas/IngredientResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+    patch:
+      tags:
+        - Ingredients
+      summary: update an ingredient by id
+      description: update and ingredient by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: path parameter takes the ingredient id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/Ingredient'
+      responses:
+        200:
+          description: An object with new ingredient detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#components/schemas/IngredientResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+    delete:
+      tags:
+        - Ingredients
+      summary: delete one ingredient by id
+      description: delete an ingredient by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: path parameter takes the ingredient id
+          type: string
+      responses:
+        200:
+          description: removed allergen with id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'

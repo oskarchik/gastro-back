@@ -1,0 +1,38 @@
+components:
+  schemas:
+    Ingredient:
+      type: object
+      properties:
+        name:
+          type: string
+          default: mustard
+        category:
+          type: string
+          default: sauces
+        hasAllergens:
+          type: boolean
+          default: true
+        allergens:
+          type: array
+          items:
+            type: string
+          default: ['63baa7292eb2785663da31f0']
+        allergenNames:
+          type: array
+          items:
+            type: string
+          default: ['mustard']
+    CreateIngredientInput:
+      allOf:
+        - $ref: '#/components/schemas/Ingredient'
+        - required:
+            - name
+            - hasAllergens
+
+    IngredientResponse:
+      allOf:
+        - $ref: '#/components/schemas/Ingredient'
+        - type: object
+          properties:
+            _id:
+              type: string
