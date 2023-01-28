@@ -1,0 +1,162 @@
+paths:
+  /api/v1/allergens:
+    get:
+      tags:
+        - Allergens
+      summary: get allergens according some query parameters
+      description: get all allergens queried with parameters
+      parameters:
+        - in: query
+          name: name
+          type: string
+          description: Name of the allergen
+      responses:
+        200:
+          description: An array of allergen objects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#components/schemas/AllergenResponse'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+    post:
+      tags:
+        - Allergens
+      summary: create a new allergen
+      description: create a new allergen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAllergenInput'
+      responses:
+        200:
+          description: An object with allergen detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#/components/schemas/AllergenResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+    delete:
+      tags:
+        - Allergens
+      summary: delete all the allergens according a parameter
+      parameters:
+        - in: query
+          name: name
+          tape: string
+          description: Name of the allergen
+      responses:
+        200:
+          description: removed allergens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+  /api/v1/allergens/{id}:
+    get:
+      tags:
+        - Allergens
+      summary: get one ingredient by id
+      description: get allergen by its id
+      parameters:
+        - name: id
+          in: path
+          description: path parameter takes the allergen id
+          type: string
+      responses:
+        200:
+          description: An object with allergen detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#/components/schemas/AllergenResponse'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+    patch:
+      tags:
+        - Allergens
+      summary: update an allergen by id
+      description: update and allergen by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: path parameter takes the allergen id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Allergen'
+      responses:
+        200:
+          description: An object with allergen detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#/components/schemas/AllergenResponse'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+    delete:
+      tags:
+        - Allergens
+      summary: delete one allergen by id
+      description: delete an allergen by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: path parameter takes the ingredient id
+          type: string
+      responses:
+        200:
+          description: removed allergen with id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
