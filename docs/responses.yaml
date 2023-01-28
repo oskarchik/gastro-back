@@ -1,0 +1,30 @@
+components:
+  responses:
+    OK:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnexpectedError:
+      description: Unexpected internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
