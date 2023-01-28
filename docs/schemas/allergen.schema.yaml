@@ -1,0 +1,22 @@
+components:
+  schemas:
+    Allergen:
+      type: object
+      properties:
+        name:
+          type: string
+        icon:
+          type: string
+    CreateAllergenInput:
+      allOf:
+        - $ref: '#/components/schemas/Allergen'
+      required:
+        - name
+
+    AllergenResponse:
+      allOf:
+        - $ref: '#/components/schemas/Allergen'
+        - type: object
+          properties:
+            _id:
+              type: string
