@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import { httpLogger } from './logger/httpLogger';
