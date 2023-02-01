@@ -4,6 +4,7 @@
 import request from 'supertest';
 import * as IngredientsService from '../ingredients.service';
 import { createApp } from '../../../app';
+import { redis } from 'src/utils/redis';
 
 const app = createApp();
 
@@ -24,6 +25,7 @@ const deleteIngredientByIdServiceMock = jest.spyOn(IngredientsService, 'removeIn
 afterEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
+  redis.flushdb();
 });
 
 describe('HAPPY PATH', () => {
