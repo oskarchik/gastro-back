@@ -1,10 +1,11 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import { httpLogger } from './logger/httpLogger';
 import { Logger } from './logger/logger';
 import { errorHandler, isTrustedError } from './error/error-handler';
 import { apiRouter } from './routes';
+import { rateLimiter } from './middlewares/rateLimiter';
 
 export const createApp = () => {
   const app = express();
@@ -15,18 +16,7 @@ export const createApp = () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(httpLogger);
 
-  // app.get('/', (_req: Request, res: Response, next: NextFunction) => {
-  //   return res.send('hello');
-  // });
-  app.get('/health', (_req: Request, res: Response) => {
-    const data = {
-      uptime: process.uptime(),
-      responseTime: process.hrtime(),
-      message: 'ok',
-      date: new Date(),
-    };
-    return res.status(200).send(data);
-  });
+  app.use(rateLimiter({ windowSize: 20, allowedRequests: 4 }));
 
   app.use('/api/v1', apiRouter);
 

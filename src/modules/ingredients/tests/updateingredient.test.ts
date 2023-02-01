@@ -2,6 +2,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import request from 'supertest';
+import { redis } from 'src/utils/redis';
 import { createApp } from '../../../app';
 import * as IngredientService from '../ingredients.service';
 
@@ -25,6 +26,7 @@ const updateIngredientServiceMock = jest.spyOn(IngredientService, 'updateIngredi
 afterEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
+  redis.flushdb();
 });
 
 describe('HAPPY PATH', () => {
