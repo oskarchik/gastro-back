@@ -11,3 +11,11 @@ export const getRecipes = async (query: FilterQuery<RecipeInput>) => {
     return error;
   }
 };
+
+export const getRecipeById = async (id: RecipeDocument['_id']) => {
+  try {
+    return await RecipeModel.findById(id).select(fieldsToReturn);
+  } catch (error) {
+    return error;
+  }
+};
