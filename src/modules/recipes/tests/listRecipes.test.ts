@@ -55,6 +55,18 @@ describe('HAPPY PATH', () => {
       expect(getRecipesServiceMock).toHaveBeenNthCalledWith(1, {});
     });
   });
+
+  describe('with recipes in db', () => {
+    it('should return 200 and an empty array', async () => {
+      // @ts-ignore
+      getRecipesServiceMock.mockReturnValueOnce([recipePayload]);
+      const { statusCode, body } = await request(app).get(baseApiUrl);
+
+      expect(statusCode).toBe(200);
+      expect(body.data).toBeInstanceOf(Array);
+      expect(getRecipesServiceMock).toHaveBeenNthCalledWith(1, {});
+    });
+  });
 });
 describe('UNHAPPY PATH', () => {
   describe('no recipes in db', () => {
