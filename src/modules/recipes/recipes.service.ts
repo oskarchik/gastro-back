@@ -19,3 +19,11 @@ export const getRecipeById = async (id: RecipeDocument['_id']) => {
     return error;
   }
 };
+
+export const createRecipe = async (recipe: RecipeInput) => {
+  try {
+    return await RecipeModel.create(recipe);
+  } catch (error) {
+    return error;
+  }
+};
