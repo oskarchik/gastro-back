@@ -5,6 +5,7 @@ import {
   createRecipe,
   updateRecipe,
   removeRecipes,
+  removeRecipeById,
 } from '../recipes.service';
 import { RecipeInput, RecipeModel } from '../recipes.model';
 
@@ -42,6 +43,7 @@ const getRecipeByIdSpy = jest.spyOn(RecipeModel, 'findById');
 const createRecipeSpy = jest.spyOn(RecipeModel, 'create');
 const updateRecipeSpy = jest.spyOn(RecipeModel, 'findByIdAndUpdate');
 const removeRecipesSpy = jest.spyOn(RecipeModel, 'deleteMany');
+const removeRecipeByIdSpy = jest.spyOn(RecipeModel, 'findByIdAndDelete');
 
 describe('recipes service', () => {
   describe('getRecipes', () => {
@@ -137,6 +139,23 @@ describe('recipes service', () => {
       const result = await removeRecipes({});
 
       expect(removeRecipesSpy).toHaveBeenCalledTimes(1);
+      // @ts-ignore
+      expect(result.message).toEqual('oh nooo');
+    });
+  });
+
+  describe('removeRecipeById', () => {
+    it('should call recipesModel.findById and return a recipe object', async () => {
+      await removeRecipeById(recipePayload._id);
+
+      expect(removeRecipeByIdSpy).toHaveBeenNthCalledWith(1, recipePayload._id);
+    });
+
+    it('should call recipesModel.findById and return an error', async () => {
+      removeRecipeByIdSpy.mockRejectedValueOnce(new Error('oh nooo'));
+      const result = await removeRecipeById(recipePayload._id);
+
+      expect(removeRecipeByIdSpy).toHaveBeenCalledTimes(1);
       // @ts-ignore
       expect(result.message).toEqual('oh nooo');
     });
