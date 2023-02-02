@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { getRecipes, getRecipeById, createRecipe } from '../recipes.service';
+import { getRecipes, getRecipeById, createRecipe, updateRecipe } from '../recipes.service';
 import { RecipeInput, RecipeModel } from '../recipes.model';
 
 jest.mock('../recipes.model');
@@ -34,6 +34,7 @@ afterEach(() => {
 const getRecipeSpy = jest.spyOn(RecipeModel, 'find');
 const getRecipeByIdSpy = jest.spyOn(RecipeModel, 'findById');
 const createRecipeSpy = jest.spyOn(RecipeModel, 'create');
+const updateRecipeSpy = jest.spyOn(RecipeModel, 'findByIdAndUpdate');
 
 describe('recipes service', () => {
   describe('getRecipes', () => {
@@ -88,6 +89,32 @@ describe('recipes service', () => {
       expect(createRecipeSpy).toHaveBeenNthCalledWith(1, recipeInput);
       // @ts-ignore
       expect(result.message).toEqual('oh nooo');
+    });
+  });
+
+  describe('updateRecipe', () => {
+    it('should call recipesModel.findByIAndUpdate and return a recipe object', async () => {
+      await updateRecipe({ recipeId: recipePayload._id, update: { name: 'new paella' } });
+
+      expect(updateRecipeSpy).toHaveBeenNthCalledWith(
+        1,
+        recipePayload._id,
+        { name: 'new paella' },
+        { new: true }
+      );
+    });
+
+    it('should call recipesModel.findByIAndUpdate and return an error', async () => {
+      const result = await updateRecipe({
+        recipeId: recipePayload._id,
+        update: { name: 'new paella' },
+      });
+
+      expect(updateRecipeSpy).toHaveBeenCalledTimes(1);
+      // @ts-ignore
+      expect(result.message).toBeDefined();
+      // @ts-ignore
+      expect(result.stack).toBeDefined();
     });
   });
 });
