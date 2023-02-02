@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { getRecipes, getRecipeById } from '../recipes.service';
+import { getRecipes, getRecipeById, createRecipe } from '../recipes.service';
 import { RecipeInput, RecipeModel } from '../recipes.model';
 
 jest.mock('../recipes.model');
@@ -33,6 +33,7 @@ afterEach(() => {
 
 const getRecipeSpy = jest.spyOn(RecipeModel, 'find');
 const getRecipeByIdSpy = jest.spyOn(RecipeModel, 'findById');
+const createRecipeSpy = jest.spyOn(RecipeModel, 'create');
 
 describe('recipes service', () => {
   describe('getRecipes', () => {
@@ -68,6 +69,25 @@ describe('recipes service', () => {
       expect(result.message).toBeDefined();
       // @ts-ignore
       expect(result.stack).toBeDefined();
+    });
+  });
+
+  describe('createRecipe', () => {
+    it('should call recipe.create with given recipe input', async () => {
+      await createRecipe(recipeInput);
+
+      expect(createRecipeSpy).toHaveBeenNthCalledWith(1, recipeInput);
+    });
+
+    it('should call recipe.create with given recipe input and return an error', async () => {
+      // @ts-ignore
+      createRecipeSpy.mockRejectedValueOnce(new Error('oh nooo'));
+
+      const result = await createRecipe(recipeInput);
+
+      expect(createRecipeSpy).toHaveBeenNthCalledWith(1, recipeInput);
+      // @ts-ignore
+      expect(result.message).toEqual('oh nooo');
     });
   });
 });
