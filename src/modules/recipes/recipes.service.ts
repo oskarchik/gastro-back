@@ -43,3 +43,12 @@ export const updateRecipe = async ({
     return error;
   }
 };
+
+export const removeRecipes = async (query: FilterQuery<RecipeInput>) => {
+  try {
+    const deletedRecipes = await RecipeModel.deleteMany(query);
+    return deletedRecipes.deletedCount;
+  } catch (error) {
+    return error;
+  }
+};
