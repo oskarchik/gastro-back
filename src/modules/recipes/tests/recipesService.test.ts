@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { getRecipes, getRecipeById, createRecipe, updateRecipe } from '../recipes.service';
+import {
+  getRecipes,
+  getRecipeById,
+  createRecipe,
+  updateRecipe,
+  removeRecipes,
+} from '../recipes.service';
 import { RecipeInput, RecipeModel } from '../recipes.model';
 
 jest.mock('../recipes.model');
@@ -35,6 +41,7 @@ const getRecipeSpy = jest.spyOn(RecipeModel, 'find');
 const getRecipeByIdSpy = jest.spyOn(RecipeModel, 'findById');
 const createRecipeSpy = jest.spyOn(RecipeModel, 'create');
 const updateRecipeSpy = jest.spyOn(RecipeModel, 'findByIdAndUpdate');
+const removeRecipesSpy = jest.spyOn(RecipeModel, 'deleteMany');
 
 describe('recipes service', () => {
   describe('getRecipes', () => {
@@ -115,6 +122,23 @@ describe('recipes service', () => {
       expect(result.message).toBeDefined();
       // @ts-ignore
       expect(result.stack).toBeDefined();
+    });
+  });
+
+  describe('removeRecipes', () => {
+    it('should call recipesModel.deleteMany and return a recipe object', async () => {
+      await removeRecipes({});
+
+      expect(removeRecipesSpy).toHaveBeenNthCalledWith(1, {});
+    });
+
+    it('should call recipesModel.findById and return an error', async () => {
+      removeRecipesSpy.mockRejectedValueOnce(new Error('oh nooo'));
+      const result = await removeRecipes({});
+
+      expect(removeRecipesSpy).toHaveBeenCalledTimes(1);
+      // @ts-ignore
+      expect(result.message).toEqual('oh nooo');
     });
   });
 });
