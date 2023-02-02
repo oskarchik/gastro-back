@@ -33,6 +33,8 @@ const recipePayload = {
 
 const baseApiUrl = '/api/v1/recipes';
 
+const error = new Error('oh noo');
+
 const getRecipesServiceMock = jest.spyOn(RecipesService, 'getRecipes');
 
 afterEach(() => {
@@ -54,4 +56,16 @@ describe('HAPPY PATH', () => {
     });
   });
 });
-// describe('UNHAPPY PATH', () => {});
+describe('UNHAPPY PATH', () => {
+  describe('no recipes in db', () => {
+    it('should return 500', async () => {
+      // @ts-ignore
+      getRecipesServiceMock.mockRejectedValueOnce(error);
+      const { statusCode, body } = await request(app).get(baseApiUrl);
+
+      expect(statusCode).toBe(500);
+      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(getRecipesServiceMock).toHaveBeenNthCalledWith(1, {});
+    });
+  });
+});
