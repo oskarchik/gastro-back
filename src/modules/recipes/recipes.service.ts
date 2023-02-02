@@ -52,3 +52,11 @@ export const removeRecipes = async (query: FilterQuery<RecipeInput>) => {
     return error;
   }
 };
+
+export const removeRecipeById = async (id: RecipeDocument['_id']) => {
+  try {
+    return await RecipeModel.findByIdAndDelete(id);
+  } catch (error) {
+    return error;
+  }
+};
