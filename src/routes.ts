@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { allergensRouter } from './modules/allergens/allergens.router';
 import { ingredientsRouter } from './modules/ingredients/ingredients.router';
+import { recipesRouter } from './modules/recipes/recipes.routes';
 
 export const apiRouter = Router();
 
@@ -19,3 +20,4 @@ apiRouter.get(
 );
 apiRouter.use('/allergens', allergensRouter);
 apiRouter.use('/ingredients', ingredientsRouter);
+apiRouter.use('/recipes', recipesRouter);
