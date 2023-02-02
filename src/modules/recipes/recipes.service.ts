@@ -27,3 +27,19 @@ export const createRecipe = async (recipe: RecipeInput) => {
     return error;
   }
 };
+
+export const updateRecipe = async ({
+  recipeId,
+  update,
+}: {
+  recipeId: RecipeDocument['_id'];
+  update: FilterQuery<RecipeDocument>;
+}) => {
+  try {
+    return await RecipeModel.findByIdAndUpdate(recipeId, update, { new: true }).select(
+      fieldsToReturn
+    );
+  } catch (error) {
+    return error;
+  }
+};
