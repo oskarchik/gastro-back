@@ -20,6 +20,15 @@ export const getRecipeById = async (id: RecipeDocument['_id']) => {
   }
 };
 
+export const getRecipesWithName = async (name: RegExp) => {
+  try {
+    const result = await RecipeModel.find({ name });
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const createRecipe = async (recipe: RecipeInput) => {
   try {
     return await RecipeModel.create(recipe);
