@@ -6,6 +6,7 @@ import {
   updateRecipe,
   removeRecipes,
   removeRecipeById,
+  getRecipesWithName,
 } from '../recipes.service';
 import { RecipeInput, RecipeModel } from '../recipes.model';
 
@@ -79,6 +80,15 @@ describe('recipes service', () => {
       expect(result.message).toBeDefined();
       // @ts-ignore
       expect(result.stack).toBeDefined();
+    });
+  });
+
+  describe('getRecipesWithName', () => {
+    it('should call recipesModel.find and return an array of recipe objects', async () => {
+      const regex = /paella/i;
+      await getRecipesWithName(regex);
+
+      expect(getRecipeSpy).toHaveBeenNthCalledWith(1, { name: regex });
     });
   });
 
