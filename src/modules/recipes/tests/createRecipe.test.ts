@@ -58,8 +58,8 @@ describe('HAPPY PATH', () => {
   });
 });
 describe('UNHAPPY PATH', () => {
-  describe('createRecipe', () => {
-    it('should return 500 when error while creating recipe', async () => {
+  describe('unexpected error while creating recipe', () => {
+    it('should return 500 when error', async () => {
       // @ts-ignore
       createRecipesServiceMock.mockRejectedValueOnce(error);
 
@@ -70,17 +70,19 @@ describe('UNHAPPY PATH', () => {
       expect(createRecipesServiceMock).toHaveBeenNthCalledWith(1, recipeInput);
     });
 
-    it('should return 400 bad request is name is missing', async () => {
-      // @ts-ignore
-      createRecipesServiceMock.mockReturnValueOnce(recipePayload);
+    describe('wrong data format', () => {
+      it('should return 400 bad request is name is missing', async () => {
+        // @ts-ignore
+        createRecipesServiceMock.mockReturnValueOnce(recipePayload);
 
-      const { statusCode, body } = await request(app)
-        .post(baseApiUrl)
-        .send({ ...recipeInput, name: undefined });
+        const { statusCode, body } = await request(app)
+          .post(baseApiUrl)
+          .send({ ...recipeInput, name: undefined });
 
-      expect(statusCode).toBe(400);
-      expect(body.error[0].message).toMatch(/name is required/i);
-      expect(createRecipesServiceMock).not.toHaveBeenCalled();
+        expect(statusCode).toBe(400);
+        expect(body.error[0].message).toMatch(/name is required/i);
+        expect(createRecipesServiceMock).not.toHaveBeenCalled();
+      });
     });
   });
 });
