@@ -34,6 +34,8 @@ export const findRecipes = async (req: Request, res: Response, next: NextFunctio
   try {
     const foundRecipes = await getRecipes(filteredQuery);
 
+    redis.setex('recipes', 3600, JSON.stringify(foundRecipes));
+
     return res.status(200).send({ data: foundRecipes });
   } catch (error) {
     return next(error);
