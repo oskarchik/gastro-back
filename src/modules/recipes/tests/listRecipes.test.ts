@@ -36,6 +36,7 @@ const baseApiUrl = '/api/v1/recipes';
 const error = new Error('oh noo');
 
 const getRecipesServiceMock = jest.spyOn(RecipesService, 'getRecipes');
+const getRecipesWithNameServiceMock = jest.spyOn(RecipesService, 'getRecipesWithName');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -60,11 +61,26 @@ describe('HAPPY PATH', () => {
     it('should return 200 and an empty array', async () => {
       // @ts-ignore
       getRecipesServiceMock.mockReturnValueOnce([recipePayload]);
+
       const { statusCode, body } = await request(app).get(baseApiUrl);
 
       expect(statusCode).toBe(200);
       expect(body.data).toBeInstanceOf(Array);
       expect(getRecipesServiceMock).toHaveBeenNthCalledWith(1, {});
+    });
+  });
+
+  describe('recipes with name', () => {
+    it('should return 200 and an array of objects', async () => {
+      // @ts-ignore
+      getRecipesWithNameServiceMock.mockReturnValueOnce([recipePayload, recipePayload]);
+
+      const { statusCode, body } = await request(app).get(baseApiUrl).query({ name: 'pa' });
+
+      expect(statusCode).toBe(200);
+      expect(body.data).toBeInstanceOf(Array);
+      expect(body.data.length).toBe(2);
+      expect(getRecipesWithNameServiceMock).toHaveBeenNthCalledWith(1, /pa/);
     });
   });
 });
@@ -73,11 +89,25 @@ describe('UNHAPPY PATH', () => {
     it('should return 500', async () => {
       // @ts-ignore
       getRecipesServiceMock.mockRejectedValueOnce(error);
+
       const { statusCode, body } = await request(app).get(baseApiUrl);
 
       expect(statusCode).toBe(500);
       expect(body.error).toMatch(/unexpected internal error/i);
       expect(getRecipesServiceMock).toHaveBeenNthCalledWith(1, {});
+    });
+  });
+
+  describe('unexpected error', () => {
+    it('should return 500 when error while getting recipes by name', async () => {
+      // @ts-ignore
+      getRecipesWithNameServiceMock.mockRejectedValueOnce(error);
+
+      const { statusCode, body } = await request(app).get(baseApiUrl).query({ name: 'pa' });
+
+      expect(statusCode).toBe(500);
+      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(getRecipesWithNameServiceMock).toHaveBeenNthCalledWith(1, /pa/);
     });
   });
 });
