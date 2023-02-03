@@ -52,10 +52,6 @@ export const makeRecipe = async (req: Request, res: Response, next: NextFunction
     allergenNames,
   } = req.body;
 
-  if (!name || hasAllergens === undefined) {
-    return next(ApiError.badRequest('name and hasAllergens are required'));
-  }
-
   try {
     const savedRecipe = await createRecipe({
       name,
