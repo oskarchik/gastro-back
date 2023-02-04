@@ -7,6 +7,7 @@ import {
   removeRecipes,
   removeRecipeById,
   getRecipesWithName,
+  getRecipesByAllergen,
 } from '../recipes.service';
 import { RecipeInput, RecipeModel } from '../recipes.model';
 
@@ -97,6 +98,24 @@ describe('recipes service', () => {
       const result = await getRecipesWithName(regex);
 
       expect(getRecipeSpy).toHaveBeenNthCalledWith(1, { name: regex });
+      // @ts-ignore
+      expect(result.message).toEqual('oh noo');
+    });
+  });
+
+  describe('getRecipesByAllergen', () => {
+    it('should call recipesModel.find and return an array of recipe objects', async () => {
+      await getRecipesByAllergen(['fish']);
+
+      expect(getRecipeSpy).toHaveBeenNthCalledWith(1, { allergenNames: { $in: ['fish'] } });
+    });
+
+    it('should call recipesModel.find and return an error', async () => {
+      // @ts-ignore
+      getRecipeSpy.mockRejectedValueOnce(new Error('oh noo'));
+      const result = await getRecipesByAllergen(['fish']);
+
+      expect(getRecipeSpy).toHaveBeenNthCalledWith(1, { allergenNames: { $in: ['fish'] } });
       // @ts-ignore
       expect(result.message).toEqual('oh noo');
     });
