@@ -82,9 +82,9 @@ const query = {
     subCategory: z.enum(subCategoryNames).optional(),
     ingredients: z.array(z.string()).optional(),
     ingredientNames: z.array(z.enum(allergenNames)).optional(),
-    hasAllergens: z.boolean().optional(),
+    hasAllergens: z.string().optional(),
     allergens: z.array(z.string()).optional(),
-    allergenNames: z.array(z.enum(allergenNames)).optional(),
+    allergenNames: z.enum(allergenNames).optional(),
   }),
 };
 
