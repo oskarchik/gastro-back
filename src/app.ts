@@ -16,7 +16,7 @@ export const createApp = () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(httpLogger);
 
-  app.use(rateLimiter({ windowSize: 20, allowedRequests: 4 }));
+  // app.use(rateLimiter({ windowSize: 20, allowedRequests: 4 }));
 
   app.use('/api/v1', apiRouter);
 
