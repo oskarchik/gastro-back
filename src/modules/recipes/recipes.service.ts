@@ -29,6 +29,15 @@ export const getRecipesWithName = async (name: RegExp) => {
   }
 };
 
+export const getRecipesByAllergen = async (allergens: FilterQuery<RecipeInput>) => {
+  try {
+    const result = await RecipeModel.find({ allergenNames: { $in: allergens } });
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const createRecipe = async (recipe: RecipeInput) => {
   try {
     return await RecipeModel.create(recipe);
