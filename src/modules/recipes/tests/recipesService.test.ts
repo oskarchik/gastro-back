@@ -84,11 +84,21 @@ describe('recipes service', () => {
   });
 
   describe('getRecipesWithName', () => {
+    const regex = /paella/i;
     it('should call recipesModel.find and return an array of recipe objects', async () => {
-      const regex = /paella/i;
       await getRecipesWithName(regex);
 
       expect(getRecipeSpy).toHaveBeenNthCalledWith(1, { name: regex });
+    });
+
+    it('should call recipesModel.find and return an error', async () => {
+      // @ts-ignore
+      getRecipeSpy.mockRejectedValueOnce(new Error('oh noo'));
+      const result = await getRecipesWithName(regex);
+
+      expect(getRecipeSpy).toHaveBeenNthCalledWith(1, { name: regex });
+      // @ts-ignore
+      expect(result.message).toEqual('oh noo');
     });
   });
 
