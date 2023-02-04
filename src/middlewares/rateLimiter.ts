@@ -21,9 +21,9 @@ export const rateLimiter =
     const requests = await redis.incr(formattedIp);
 
     if (requests === 1) {
-      await redis.expire(ip, windowSize);
+      await redis.expire(formattedIp, windowSize);
     } else {
-      await redis.ttl(ip);
+      await redis.ttl(formattedIp);
     }
 
     if (requests > allowedRequests) {
