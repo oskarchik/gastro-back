@@ -1,8 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import { ApiError } from 'src/error/ApiError';
 import { filterProperties } from 'src/utils/filterProperties';
 import { redis } from 'src/utils/redis';
-import { createRecipe, getRecipes, getRecipesWithName } from './recipes.service';
+import { createRedisKey } from 'src/utils/redisKey';
+import {
+  createRecipe,
+  getRecipes,
+  getRecipesByAllergen,
+  getRecipesWithName,
+} from './recipes.service';
 
 export const findRecipes = async (req: Request, res: Response, next: NextFunction) => {
   const properties = [
@@ -16,25 +21,45 @@ export const findRecipes = async (req: Request, res: Response, next: NextFunctio
   ];
 
   const recipeName = req.query.name as string;
-
-  const regexName = new RegExp(recipeName);
+  const { allergenNames } = req.query;
 
   if (recipeName) {
+    const regexName = new RegExp(recipeName);
+
     try {
       const foundRecipes = await getRecipesWithName(regexName);
 
       redis.setex(`recipes_name_${recipeName}`, 3600, JSON.stringify(foundRecipes));
+
       return res.status(200).send({ data: foundRecipes });
     } catch (error) {
       return next(error);
     }
   }
+  if (allergenNames) {
+    const parsedNames = Array.isArray(allergenNames) ? allergenNames : [allergenNames.toString()];
+
+    try {
+      const foundRecipes = await getRecipesByAllergen(parsedNames);
+
+      redis.setex(`recipes_allergen_${parsedNames}`, 3600, JSON.stringify(foundRecipes));
+
+      return res.status(200).send({ data: foundRecipes });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   const filteredQuery = filterProperties(properties, req.query);
 
   try {
     const foundRecipes = await getRecipes(filteredQuery);
 
-    redis.setex('recipes', 3600, JSON.stringify(foundRecipes));
+    await redis.setex(
+      createRedisKey({ queryObject: filteredQuery, controller: 'recipes' }) as string,
+      3600,
+      JSON.stringify(foundRecipes)
+    );
 
     return res.status(200).send({ data: foundRecipes });
   } catch (error) {
