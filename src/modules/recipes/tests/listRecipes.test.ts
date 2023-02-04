@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable import/no-extraneous-dependencies */
-
 import request from 'supertest';
 import * as RecipesService from '../recipes.service';
 import { createApp } from 'src/app';
@@ -37,6 +36,7 @@ const error = new Error('oh noo');
 
 const getRecipesServiceMock = jest.spyOn(RecipesService, 'getRecipes');
 const getRecipesWithNameServiceMock = jest.spyOn(RecipesService, 'getRecipesWithName');
+const getRecipesByAllergenServiceMock = jest.spyOn(RecipesService, 'getRecipesByAllergen');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -83,6 +83,20 @@ describe('HAPPY PATH', () => {
       expect(getRecipesWithNameServiceMock).toHaveBeenNthCalledWith(1, /pa/);
     });
   });
+  describe('recipes by allergen', () => {
+    it('should return 200 and an array of objects', async () => {
+      // @ts-ignore
+      getRecipesByAllergenServiceMock.mockReturnValueOnce([recipePayload]);
+
+      const { statusCode, body } = await request(app)
+        .get(baseApiUrl)
+        .query({ allergenNames: ['fish'] });
+
+      expect(statusCode).toBe(200);
+      expect(body.data).toBeInstanceOf(Array);
+      expect(getRecipesByAllergenServiceMock).toHaveBeenNthCalledWith(1, ['fish']);
+    });
+  });
 });
 describe('UNHAPPY PATH', () => {
   describe('no recipes in db', () => {
@@ -108,6 +122,18 @@ describe('UNHAPPY PATH', () => {
       expect(statusCode).toBe(500);
       expect(body.error).toMatch(/unexpected internal error/i);
       expect(getRecipesWithNameServiceMock).toHaveBeenNthCalledWith(1, /pa/);
+    });
+    it('should return 500 when error while getting recipes by allergen', async () => {
+      // @ts-ignore
+      getRecipesByAllergenServiceMock.mockRejectedValueOnce(error);
+
+      const { statusCode, body } = await request(app)
+        .get(baseApiUrl)
+        .query({ allergenNames: ['fish'] });
+
+      expect(statusCode).toBe(500);
+      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(getRecipesByAllergenServiceMock).toHaveBeenNthCalledWith(1, ['fish']);
     });
   });
 });
