@@ -158,15 +158,27 @@ describe('UNHAPPY PATH', () => {
       expect(body.error).toMatch(/unexpected internal error/i);
       expect(getRecipesByIdServiceMock).toHaveBeenNthCalledWith(1, recipePayload._id);
     });
-  });
 
-  describe('invalid id when getting recipe by id', () => {
-    it('should return 400 error', async () => {
-      const { statusCode, body } = await request(app).get(`${baseApiUrl}/1234`);
+    describe('invalid id when getting recipe by id', () => {
+      it('should return 400 error', async () => {
+        const { statusCode, body } = await request(app).get(`${baseApiUrl}/1234`);
 
-      expect(statusCode).toBe(400);
-      expect(body.error).toMatch(/invalid id/i);
-      expect(getRecipesByIdServiceMock).not.toHaveBeenCalled();
+        expect(statusCode).toBe(400);
+        expect(body.error).toMatch(/invalid id/i);
+        expect(getRecipesByIdServiceMock).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('not found error when getting recipe by id', () => {
+      it('should return 404 error', async () => {
+        const { statusCode, body } = await request(app).get(
+          `${baseApiUrl}/639eea5a049fc933bddebab2`
+        );
+
+        expect(statusCode).toBe(404);
+        expect(body.error).toMatch(/recipe not found/i);
+        expect(getRecipesByIdServiceMock).toHaveBeenNthCalledWith(1, '639eea5a049fc933bddebab2');
+      });
     });
   });
 });
