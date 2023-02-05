@@ -10,6 +10,7 @@ import {
   getRecipes,
   getRecipesByAllergen,
   getRecipesWithName,
+  removeRecipeById,
   removeRecipes,
 } from './recipes.service';
 
@@ -141,6 +142,26 @@ export const deleteRecipes = async (req: Request, res: Response, next: NextFunct
     const result = await removeRecipes(filteredQuery);
 
     return res.status(200).send({ message: `${result} recipes deleted from db` });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const deleteRecipeById = async (req: Request, res: Response, next: NextFunction) => {
+  const recipeId = req.params.id;
+
+  if (!isValidId(recipeId)) {
+    return next(ApiError.badRequest('Invalid id'));
+  }
+
+  try {
+    const deletedRecipe = await removeRecipeById(recipeId);
+
+    if (deletedRecipe === null) {
+      return next(ApiError.notFound('Recipe not found to delete'));
+    }
+
+    return res.status(200).send({ message: `Deleted Recipe ${recipeId}` });
   } catch (error) {
     return next(error);
   }
