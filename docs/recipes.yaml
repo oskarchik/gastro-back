@@ -77,3 +77,37 @@ paths:
           $ref: '#components/responses/BadRequest'
         500:
           $ref: '#components/responses/UnexpectedError'
+
+    delete:
+      tags:
+        - Recipes
+      summary: delete all the recipes according a parameter
+      parameters:
+        - in: query
+          name: name
+          tape: string
+          description: Name of the recipe
+        - in: query
+          name: category
+          tape: string
+          description: Category of the recipes
+        - in: query
+          name: subCategory
+          tape: string
+          description: Subcategory of the recipes
+        - in: query
+          name: hasAllergens
+          tape: boolean
+          description: Recipes have allergens or not
+        - in: query
+          name: allergenNames
+          type: array
+          items:
+            type: string
+          description: List of allergens names
+      responses:
+        200:
+          description: Return string with number of recipes deleted
+          $ref: '#components/responses/OKMessage'
+        500:
+          $ref: '#components/responses/UnexpectedError'
