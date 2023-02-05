@@ -27,10 +27,10 @@ paths:
           type: array
           items:
             type: string
-          description: List of ingredients names
+          description: List of Recipes names
         - in: query
-          name: allergenNames
-          type: array
+          recipe: allergenNames
+          typrecipe: array
           items:
             type: string
           description: List of allergens names
@@ -169,6 +169,28 @@ paths:
                   data:
                     type: object
                     $ref: '#components/schemas/RecipeResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+    delete:
+      tags:
+        - Recipes
+      summary: delete one recipe by id
+      description: delete an recipe by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: path parameter takes the recipe id
+          type: string
+      responses:
+        200:
+          description: removed allergen with id
+          $ref: '#components/responses/OKMessage'
         400:
           $ref: '#components/responses/BadRequest'
         404:
