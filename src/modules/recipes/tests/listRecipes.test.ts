@@ -148,5 +148,25 @@ describe('UNHAPPY PATH', () => {
       expect(body.error).toMatch(/unexpected internal error/i);
       expect(getRecipesByAllergenServiceMock).toHaveBeenNthCalledWith(1, ['fish']);
     });
+    it('should return 500 when error while getting recipes by id', async () => {
+      // @ts-ignore
+      getRecipesByIdServiceMock.mockRejectedValueOnce(error);
+
+      const { statusCode, body } = await request(app).get(`${baseApiUrl}/${recipePayload._id}`);
+
+      expect(statusCode).toBe(500);
+      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(getRecipesByIdServiceMock).toHaveBeenNthCalledWith(1, recipePayload._id);
+    });
+  });
+
+  describe('invalid id when getting recipe by id', () => {
+    it('should return 400 error', async () => {
+      const { statusCode, body } = await request(app).get(`${baseApiUrl}/1234`);
+
+      expect(statusCode).toBe(400);
+      expect(body.error).toMatch(/invalid id/i);
+      expect(getRecipesByIdServiceMock).not.toHaveBeenCalled();
+    });
   });
 });
