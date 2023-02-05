@@ -141,3 +141,37 @@ paths:
           $ref: '#components/responses/NotFound'
         500:
           $ref: '#components/responses/UnexpectedError'
+
+    patch:
+      tags:
+        - Recipes
+      summary: update an recipe by id
+      description: update and recipe by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: path parameter takes the recipe id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/Recipe'
+      responses:
+        200:
+          description: An object with new recipe detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#components/schemas/RecipeResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
