@@ -122,3 +122,26 @@ export const makeRecipe = async (req: Request, res: Response, next: NextFunction
     return next(error);
   }
 };
+
+export const deleteRecipes = async (req: Request, res: Response, next: NextFunction) => {
+  const properties = [
+    'name',
+    'category',
+    'subCategory',
+    'ingredients',
+    'ingredientNames',
+    'hasAllergens',
+    'allergens',
+    'allergenNames',
+  ];
+
+  const filteredQuery = filterProperties(properties, req.query);
+
+  try {
+    const result = await removeRecipes(filteredQuery);
+
+    return res.status(200).send({ message: `${result} recipes deleted from db` });
+  } catch (error) {
+    return next(error);
+  }
+};
