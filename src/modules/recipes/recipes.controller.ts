@@ -1,12 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
+import { ApiError } from 'src/error/ApiError';
 import { filterProperties } from 'src/utils/filterProperties';
+import { isValidId } from 'src/utils/idValidation';
 import { redis } from 'src/utils/redis';
 import { createRedisKey } from 'src/utils/redisKey';
 import {
   createRecipe,
+  getRecipeById,
   getRecipes,
   getRecipesByAllergen,
   getRecipesWithName,
+  removeRecipes,
 } from './recipes.service';
 
 export const findRecipes = async (req: Request, res: Response, next: NextFunction) => {
@@ -62,6 +66,28 @@ export const findRecipes = async (req: Request, res: Response, next: NextFunctio
     );
 
     return res.status(200).send({ data: foundRecipes });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const findRecipeById = async (req: Request, res: Response, next: NextFunction) => {
+  const recipeId = req.params.id;
+
+  if (!isValidId(recipeId)) {
+    return next(ApiError.badRequest('Invalid id'));
+  }
+
+  try {
+    const foundRecipe = await getRecipeById(recipeId);
+
+    if (!foundRecipe) {
+      return next(ApiError.notFound('Recipe not found'));
+    }
+
+    redis.setex(`recipes_${recipeId}`, 3600, JSON.stringify(foundRecipe));
+
+    return res.status(200).send({ data: foundRecipe });
   } catch (error) {
     return next(error);
   }
