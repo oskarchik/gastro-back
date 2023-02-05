@@ -58,6 +58,18 @@ describe('HAPPY PATH', () => {
       expect(deleteRecipesServiceMock).toHaveBeenNthCalledWith(1, { category: 'main' });
     });
   });
+  describe('remove recipe by id', () => {
+    it('should return 200 and a message with the id', async () => {
+      // @ts-ignore
+      deleteRecipeByIdServiceMock.mockReturnValueOnce(recipePayload);
+
+      const { statusCode, body } = await request(app).delete(`${baseApiUrl}/${recipePayload._id}`);
+
+      expect(statusCode).toBe(200);
+      expect(body.message).toMatch(/deleted recipe 639eea5a049fc933bddebab2/i);
+      expect(deleteRecipeByIdServiceMock).toHaveBeenNthCalledWith(1, recipePayload._id);
+    });
+  });
 });
 describe('UNHAPPY PATH', () => {
   describe('unexpected error', () => {
@@ -72,6 +84,39 @@ describe('UNHAPPY PATH', () => {
       expect(statusCode).toBe(500);
       expect(body.error).toMatch(/unexpected internal error/i);
       expect(deleteRecipesServiceMock).toHaveBeenNthCalledWith(1, { category: 'main' });
+    });
+    it('should return 500 when deleting recipe by id', async () => {
+      // @ts-ignore
+      deleteRecipeByIdServiceMock.mockRejectedValueOnce(error);
+
+      const { statusCode, body } = await request(app).delete(`${baseApiUrl}/${recipePayload._id}`);
+
+      expect(statusCode).toBe(500);
+      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(deleteRecipeByIdServiceMock).toHaveBeenNthCalledWith(1, recipePayload._id);
+    });
+  });
+
+  describe('bad request error', () => {
+    it('should return 400 error when given id has wrong format', async () => {
+      const { statusCode, body } = await request(app).delete(`${baseApiUrl}/123`);
+
+      expect(statusCode).toBe(400);
+      expect(body.error).toMatch(/invalid id/i);
+      expect(deleteRecipeByIdServiceMock).not.toHaveBeenCalled();
+    });
+  });
+  describe('not found error', () => {
+    it('should return 404 when given recipe id is not found', async () => {
+      // @ts-ignore
+      deleteRecipeByIdServiceMock.mockReturnValueOnce(null);
+      const { statusCode, body } = await request(app).delete(
+        `${baseApiUrl}/639eea5a049fc933bddebab3`
+      );
+
+      expect(statusCode).toBe(404);
+      expect(body.error).toMatch(/recipe not found to delete/i);
+      expect(deleteRecipeByIdServiceMock).toHaveBeenNthCalledWith(1, '639eea5a049fc933bddebab3');
     });
   });
 });
