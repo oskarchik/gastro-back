@@ -111,3 +111,33 @@ paths:
           $ref: '#components/responses/OKMessage'
         500:
           $ref: '#components/responses/UnexpectedError'
+
+  /api/v1/recipes/{id}:
+    get:
+      tags:
+        - Recipes
+      summary:  get one recipe by id
+      description: get recipe detail by its id
+      parameters:
+        - name: id
+          in: path
+          description: path parameter takes the recipe id
+          required: true
+          type: string
+      responses:
+        200:
+          description: An object with an recipe detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#components/schemas/RecipeResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
