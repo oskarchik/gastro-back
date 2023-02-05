@@ -37,6 +37,7 @@ const error = new Error('oh noo');
 const getRecipesServiceMock = jest.spyOn(RecipesService, 'getRecipes');
 const getRecipesWithNameServiceMock = jest.spyOn(RecipesService, 'getRecipesWithName');
 const getRecipesByAllergenServiceMock = jest.spyOn(RecipesService, 'getRecipesByAllergen');
+const getRecipesByIdServiceMock = jest.spyOn(RecipesService, 'getRecipeById');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -95,6 +96,18 @@ describe('HAPPY PATH', () => {
       expect(statusCode).toBe(200);
       expect(body.data).toBeInstanceOf(Array);
       expect(getRecipesByAllergenServiceMock).toHaveBeenNthCalledWith(1, ['fish']);
+    });
+  });
+  describe('recipe by id', () => {
+    it('should return 200 and a recipe object', async () => {
+      // @ts-ignore
+      getRecipesByIdServiceMock.mockReturnValueOnce(recipePayload);
+
+      const { statusCode, body } = await request(app).get(`${baseApiUrl}/${recipePayload._id}`);
+
+      expect(statusCode).toBe(200);
+      expect(body.data).toEqual(recipePayload);
+      expect(getRecipesByIdServiceMock).toHaveBeenNthCalledWith(1, recipePayload._id);
     });
   });
 });
