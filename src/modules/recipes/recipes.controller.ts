@@ -12,6 +12,7 @@ import {
   getRecipesWithName,
   removeRecipeById,
   removeRecipes,
+  updateRecipe,
 } from './recipes.service';
 
 export const findRecipes = async (req: Request, res: Response, next: NextFunction) => {
@@ -162,6 +163,27 @@ export const deleteRecipeById = async (req: Request, res: Response, next: NextFu
     }
 
     return res.status(200).send({ message: `Deleted Recipe ${recipeId}` });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const patchRecipe = async (req: Request, res: Response, next: NextFunction) => {
+  const recipeId = req.params.id;
+
+  if (!isValidId(recipeId)) {
+    return next(ApiError.badRequest('Invalid id'));
+  }
+
+  const update = req.body;
+
+  try {
+    const updatedRecipe = await updateRecipe({ recipeId, update });
+
+    if (updatedRecipe === null) {
+      return next(ApiError.notFound('Recipe not found to update'));
+    }
+    return res.status(200).send({ data: updatedRecipe });
   } catch (error) {
     return next(error);
   }
