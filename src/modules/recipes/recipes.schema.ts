@@ -60,7 +60,7 @@ const updatePayload = {
     category: z.enum(categoryNames).optional(),
     subCategory: z.enum(subCategoryNames).optional(),
     ingredients: z.array(z.string()).optional(),
-    ingredientNames: z.array(z.enum(allergenNames)).optional(),
+    ingredientNames: z.array(z.string()).optional(),
     hasAllergens: z.boolean().optional(),
     allergens: z.array(z.string()).optional(),
     allergenNames: z.array(z.enum(allergenNames)).optional(),
