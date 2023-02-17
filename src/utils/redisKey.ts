@@ -1,13 +1,25 @@
+/* eslint-disable no-return-await */
 import { Request } from 'express';
 import { FilterQuery } from 'mongoose';
-import { IngredientInput } from 'src/modules/ingredients/ingredients.model';
-import { RecipeInput } from 'src/modules/recipes/recipes.model';
+import { AllergenDocument } from 'src/modules/allergens/allergens.model';
+import { IngredientDocument, IngredientInput } from 'src/modules/ingredients/ingredients.model';
+import { RecipeDocument, RecipeInput } from 'src/modules/recipes/recipes.model';
 import { getRoute } from './getRoute';
+import { redis } from './redis';
 
 export type KeyFromQuery = {
   queryObject: Partial<Request> | Partial<FilterQuery<IngredientInput | RecipeInput>>;
   controller?: string;
 };
+
+export type DBDocument = Partial<RecipeDocument | IngredientDocument | AllergenDocument>;
+
+export type UpdateRedis = {
+  controller: string;
+  document: DBDocument;
+};
+
+export type DeleteRedis = string | string[];
 
 export const createRedisKey = ({ queryObject, controller }: KeyFromQuery) => {
   const route = getRoute(queryObject.baseUrl) || controller;
@@ -25,4 +37,24 @@ export const createRedisKey = ({ queryObject, controller }: KeyFromQuery) => {
   }
 
   return route;
+};
+
+export const updateRedisKeys = async ({ controller, document }: UpdateRedis) => {
+  const keys = await redis.keys(`*${controller}*`);
+
+  Promise.all(
+    keys
+      .filter((key) => !key.match(/\d+/))
+      .map(async (key) => {
+        await redis.del(key);
+      })
+  );
+
+  await redis.setex(`${controller}_${document._id}`, 3600, JSON.stringify(document));
+};
+
+export const deleteRedisKeys = async (keys: DeleteRedis) => {
+  const redisKeys = await redis.keys(`*${keys}*`);
+
+  return Promise.all(redisKeys.map(async (key) => redis.del(key)));
 };
