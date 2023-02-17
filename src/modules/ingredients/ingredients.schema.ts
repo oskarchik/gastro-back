@@ -66,7 +66,7 @@ const params = {
 
 const query = {
   query: z.object({
-    name: z.string().optional(),
+    name: z.union([z.string(), z.array(z.string())]).optional(),
     category: z.enum(categoryNames).optional(),
     hasAllergens: z.string().optional(),
     allergens: z.array(z.string()).optional(),
