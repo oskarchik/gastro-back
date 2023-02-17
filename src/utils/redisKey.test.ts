@@ -1,8 +1,6 @@
 import { Request } from 'express';
-import { FilterQuery } from 'mongoose';
-import { IngredientInput } from 'src/modules/ingredients/ingredients.model';
-import { RecipeInput } from 'src/modules/recipes/recipes.model';
-import { createRedisKey, KeyFromQuery } from './redisKey';
+import { redis } from './redis';
+import { createRedisKey, deleteRedisKeys, KeyFromQuery, updateRedisKeys } from './redisKey';
 
 const queryObject: Partial<Request> = {
   params: {},
@@ -14,7 +12,35 @@ const object: KeyFromQuery = {
   controller: 'allergens',
 };
 
-describe('redisKey', () => {
+const DBDocument1 = {
+  _id: '639eea5a049fc933bddebab2',
+  name: 'ingredient 1',
+  category: 'eggs',
+  hasAllergens: true,
+  allergens: ['639eea5a049fc933bddebab3'],
+  allergenNames: ['celery'],
+};
+const DBDocument2 = {
+  _id: '549eea5a049fc933bddebab8',
+  name: 'ingredient 2',
+  category: 'vegetables',
+  hasAllergens: false,
+  allergens: [],
+  allergenNames: [],
+};
+
+afterEach(() => {
+  redis.flushdb();
+});
+
+afterAll(async () => {
+  await new Promise((resolve) => {
+    redis.quit();
+    redis.on('end', resolve);
+  });
+});
+
+describe('create redisKey', () => {
   it('should return allergens_1234', () => {
     const result = createRedisKey({
       ...object,
@@ -53,5 +79,50 @@ describe('redisKey', () => {
     const result = createRedisKey(paramObject);
 
     expect(result).toEqual('recipes_{"name":"pa"}');
+  });
+});
+describe('updated redisKeys', () => {
+  it('should update record with id and remove the rest with given name in key', async () => {
+    redis.flushdb();
+    const DB = [DBDocument1, DBDocument2];
+    await Promise.all(
+      DB.map(async (doc, i) => {
+        if (i === 1) {
+          await redis.setex(`ingredients_${doc._id}`, 1000, JSON.stringify(doc));
+        }
+        await redis.setex(`ingredients`, 1000, JSON.stringify(doc));
+      })
+    );
+
+    await updateRedisKeys({
+      controller: 'ingredients',
+      document: { ...DBDocument2, name: 'test' },
+    });
+
+    const updatedIngredient = JSON.parse(
+      (await redis.get(`ingredients_${DBDocument2._id}`)) as string
+    );
+    const updatedKeys = await redis.keys('*');
+
+    expect(updatedIngredient.name).toEqual('test');
+    expect(updatedKeys.length).toEqual(1);
+  });
+});
+describe('delete redisKeys', () => {
+  it('should delete redis keys', async () => {
+    redis.flushdb();
+    const DB = [DBDocument1, DBDocument2];
+    await Promise.all(
+      DB.map(async (doc, i) => {
+        if (i === 1) {
+          await redis.setex(`ingredients_${doc._id}`, 1000, JSON.stringify(doc));
+        }
+        await redis.setex(`ingredients`, 1000, JSON.stringify(doc));
+      })
+    );
+    await deleteRedisKeys('ingredients');
+    const result = await redis.keys('*ingredients*');
+
+    expect(result.length).toBe(0);
   });
 });
