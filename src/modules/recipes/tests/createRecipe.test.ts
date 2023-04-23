@@ -43,6 +43,10 @@ afterEach(() => {
   redis.flushdb();
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 describe('HAPPY PATH', () => {
   describe('createRecipe', () => {
     it('should return 200 and an recipe object', async () => {

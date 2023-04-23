@@ -24,6 +24,10 @@ afterEach(() => {
   redis.flushdb();
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 const updateAllergenServiceMock = jest.spyOn(AllergenService, 'updateAllergen');
 
 describe('HAPPY PATH', () => {

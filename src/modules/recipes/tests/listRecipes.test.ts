@@ -44,6 +44,9 @@ afterEach(() => {
   jest.resetAllMocks();
   redis.flushdb();
 });
+afterAll(async () => {
+  await redis.quit();
+});
 
 describe('HAPPY PATH', () => {
   describe('no recipes in db', () => {

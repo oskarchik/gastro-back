@@ -11,6 +11,10 @@ afterEach(() => {
   redis.flushdb();
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 describe('health', () => {
   it('should return 200', async () => {
     const { statusCode, body } = await request(app).get(baseApiUrl);

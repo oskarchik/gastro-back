@@ -27,6 +27,10 @@ afterEach(() => {
   redis.flushdb();
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 describe('allergens', () => {
   describe('POST/allergen', () => {
     createAllergenServiceMock;

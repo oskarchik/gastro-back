@@ -32,6 +32,10 @@ afterEach(() => {
   redis.flushdb();
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 describe('HAPPY PATH', () => {
   describe('remove all recipes', () => {
     it('it should return 200 and a message with number of documents deleted', async () => {

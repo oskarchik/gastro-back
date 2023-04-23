@@ -36,6 +36,10 @@ afterEach(() => {
   redis.flushdb();
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 describe('HAPPY PATH', () => {
   describe('create ingredient', () => {
     it('should return 200 and return ingredientPayload', async () => {

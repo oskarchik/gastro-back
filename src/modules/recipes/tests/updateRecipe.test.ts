@@ -29,6 +29,10 @@ afterEach(() => {
   redis.flushdb();
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 describe('HAPPY PATH', () => {
   it('should return 200 and a recipe object with the info updated', async () => {
     // @ts-ignore
