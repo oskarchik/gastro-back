@@ -1,0 +1,51 @@
+components:
+  schemas:
+    Recipe:
+      type: object
+      properties:
+        name:
+          type: string
+          default: pisto
+        category:
+          type: string
+          default: starters
+        subCategory:
+          type: string
+          default: vegetables
+        ingredients:
+          type: array
+          items:
+            type: string
+          default: ['63baa7292eb2785663da31f0', 63baa7292eb2785663da31f1', '63baa7292eb2785663da31f2', '63baa7292eb2785663da31f3']
+        ingredientNames:
+          type: array
+          items:
+            type: string
+          default: ['eggs', 'onion', 'green pepper', 'tomato']
+        hasAllergens:
+          type: boolean
+          default: true
+        allergens:
+          type: array
+          items:
+            type: string
+          default: ['63baa7292eb2785663da31f0']
+        allergenNames:
+          type: array
+          items:
+            type: string
+          default: ['eggs']
+    CreateRecipeInput:
+      allOf:
+        - $ref: '#/components/schemas/Recipe'
+        - required:
+            - name
+            - hasAllergens
+
+    RecipeResponse:
+      allOf:
+        - $ref: '#/components/schemas/Recipe'
+        - type: object
+          properties:
+            _id:
+              type: string

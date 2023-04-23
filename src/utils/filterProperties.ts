@@ -1,5 +1,9 @@
+import { FilterQuery } from 'mongoose';
+import { IngredientInput } from 'src/modules/ingredients/ingredients.model';
+import { RecipeInput } from 'src/modules/recipes/recipes.model';
+
 export const filterProperties = (propertiesToKeep: string[], object: any) => {
-  const filteredObject: any = {};
+  const filteredObject: Partial<FilterQuery<IngredientInput | RecipeInput>> = {};
   // eslint-disable-next-line no-restricted-syntax
   for (const item in object) {
     if (propertiesToKeep.includes(item)) {

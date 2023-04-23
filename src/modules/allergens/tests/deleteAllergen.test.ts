@@ -20,6 +20,10 @@ afterEach(() => {
   redis.flushdb();
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 const deleteAllergenByIdServiceMock = jest.spyOn(AllergenService, 'removeAllergenById');
 
 const deleteAllAllergensServiceMock = jest.spyOn(AllergenService, 'removeAllAllergens');

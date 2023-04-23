@@ -9,6 +9,16 @@ components:
             properties:
               data:
                 type: object
+    OKMessage:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
 
     BadRequest:
       description: Bad request

@@ -3,7 +3,7 @@ import { redis } from 'src/utils/redis';
 import { createRedisKey } from 'src/utils/redisKey';
 
 export const cache = async (req: Request, res: Response, next: NextFunction) => {
-  const key = createRedisKey(req);
+  const key = createRedisKey({ queryObject: req }) as string;
 
   try {
     const cachedResult = await redis.get(key);

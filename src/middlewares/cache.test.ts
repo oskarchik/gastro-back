@@ -17,6 +17,11 @@ const mockRedis = jest.spyOn(redis, 'get');
 afterEach(() => {
   redis.flushdb();
 });
+
+afterAll(async () => {
+  await redis.quit();
+});
+
 describe('cache middleware', () => {
   it('should return cached data', async () => {
     await redis.setex('allergens', 2000, JSON.stringify({ data: 'testdata' }));

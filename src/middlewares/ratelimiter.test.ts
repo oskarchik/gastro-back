@@ -24,6 +24,10 @@ afterEach(() => {
   redis.del(IP_ADDRESS);
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 const limiter = rateLimiter(rateLimiterOptions);
 
 describe('rateLimiter', () => {

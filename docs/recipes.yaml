@@ -1,0 +1,199 @@
+paths:
+  /api/v1/recipes:
+    get:
+      tags:
+        - Recipes
+      summary: get all Recipes
+      description:  get all recipes according to some parameters
+      parameters:
+        - in: query
+          name: name
+          tape: string
+          description: Name of the recipe
+        - in: query
+          name: category
+          tape: string
+          description: Category of the recipe
+        - in: query
+          name: subCategory
+          tape: string
+          description: Subcategory of the recipe
+        - in: query
+          name: hasAllergens
+          tape: boolean
+          description: Recipe have allergens or not
+        - in: query
+          name: ingredientNames
+          type: array
+          items:
+            type: string
+          description: List of Recipes names
+        - in: query
+          recipe: allergenNames
+          typrecipe: array
+          items:
+            type: string
+          description: List of allergens names
+
+      responses:
+        200:
+          description: An array of recipes filtered by query string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#components/schemas/RecipeResponse'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+    post:
+      tags:
+        - Recipes
+      summary: create a new recipe
+      description: creates a new recipe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRecipeInput'
+
+      responses:
+        200:
+          description: An object with an recipe detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#components/schemas/RecipeResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+    delete:
+      tags:
+        - Recipes
+      summary: delete all the recipes according a parameter
+      parameters:
+        - in: query
+          name: name
+          tape: string
+          description: Name of the recipe
+        - in: query
+          name: category
+          tape: string
+          description: Category of the recipes
+        - in: query
+          name: subCategory
+          tape: string
+          description: Subcategory of the recipes
+        - in: query
+          name: hasAllergens
+          tape: boolean
+          description: Recipes have allergens or not
+        - in: query
+          name: allergenNames
+          type: array
+          items:
+            type: string
+          description: List of allergens names
+      responses:
+        200:
+          description: Return string with number of recipes deleted
+          $ref: '#components/responses/OKMessage'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+  /api/v1/recipes/{id}:
+    get:
+      tags:
+        - Recipes
+      summary:  get one recipe by id
+      description: get recipe detail by its id
+      parameters:
+        - name: id
+          in: path
+          description: path parameter takes the recipe id
+          required: true
+          type: string
+      responses:
+        200:
+          description: An object with an recipe detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#components/schemas/RecipeResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+    patch:
+      tags:
+        - Recipes
+      summary: update an recipe by id
+      description: update and recipe by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: path parameter takes the recipe id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/Recipe'
+      responses:
+        200:
+          description: An object with new recipe detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: '#components/schemas/RecipeResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'
+
+    delete:
+      tags:
+        - Recipes
+      summary: delete one recipe by id
+      description: delete an recipe by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: path parameter takes the recipe id
+          type: string
+      responses:
+        200:
+          description: removed allergen with id
+          $ref: '#components/responses/OKMessage'
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/UnexpectedError'

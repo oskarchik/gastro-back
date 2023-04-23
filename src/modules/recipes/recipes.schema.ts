@@ -1,20 +1,25 @@
 import { z } from 'zod';
 
-const categoryNames = [
+const categoryNames = ['starters', 'main', 'desserts', 'garnishes', 'drinks'] as const;
+
+const subCategoryNames = [
   'meat',
   'fish',
   'seafood',
-  'vegetable',
-  'legume',
+  'vegetables',
+  'legumes',
   'dairy',
-  'fruit',
-  'cereal',
-  'fat',
+  'fruits',
+  'doughs',
+  'pasta',
+  'rice',
+  'salads',
+  'soups',
   'eggs',
-  'herbs and spices',
   'sauces',
   'others',
 ] as const;
+
 const allergenNames = [
   'gluten',
   'peanuts',
@@ -38,8 +43,11 @@ const payload = {
       required_error: 'Name is required',
     }),
     category: z.enum(categoryNames).optional(),
+    subCategory: z.enum(subCategoryNames).optional(),
+    ingredients: z.array(z.string()),
+    ingredientNames: z.array(z.string()),
     hasAllergens: z.boolean({
-      required_error: 'Please define if the ingredient contains allergens',
+      required_error: 'Please define if the recipe contains allergens',
     }),
     allergens: z.array(z.string()).optional(),
     allergenNames: z.array(z.enum(allergenNames)).optional(),
@@ -50,6 +58,9 @@ const updatePayload = {
   body: z.object({
     name: z.string().optional(),
     category: z.enum(categoryNames).optional(),
+    subCategory: z.enum(subCategoryNames).optional(),
+    ingredients: z.array(z.string()).optional(),
+    ingredientNames: z.array(z.string()).optional(),
     hasAllergens: z.boolean().optional(),
     allergens: z.array(z.string()).optional(),
     allergenNames: z.array(z.enum(allergenNames)).optional(),
@@ -66,39 +77,42 @@ const params = {
 
 const query = {
   query: z.object({
-    name: z.union([z.string(), z.array(z.string())]).optional(),
+    name: z.string().optional(),
     category: z.enum(categoryNames).optional(),
+    subCategory: z.enum(subCategoryNames).optional(),
+    ingredients: z.array(z.string()).optional(),
+    ingredientNames: z.array(z.enum(allergenNames)).optional(),
     hasAllergens: z.string().optional(),
     allergens: z.array(z.string()).optional(),
     allergenNames: z.enum(allergenNames).optional(),
   }),
 };
 
-export const getIngredientSchema = z.object({
+export const getRecipeSchema = z.object({
   ...query,
 });
 
-export const getIngredientByIdSchema = z.object({
+export const getRecipeByIdSchema = z.object({
   ...params,
 });
 
-export const createIngredientSchema = z.object({
+export const createRecipeSchema = z.object({
   ...payload,
 });
-export const deleteIngredientSchema = z.object({
+export const deleteRecipeSchema = z.object({
   ...query,
 });
 
-export const deleteIngredientByIdSchema = z.object({
+export const deleteRecipeByIdSchema = z.object({
   ...params,
 });
 
-export const updateIngredientSchema = z.object({
+export const updateRecipeSchema = z.object({
   ...updatePayload,
   ...params,
 });
 
-export type GetIngredientSchema = z.TypeOf<typeof getIngredientSchema>;
-export type CreateIngredientSchema = z.TypeOf<typeof createIngredientSchema>;
-export type DeleteIngredientSchema = z.TypeOf<typeof deleteIngredientSchema>;
-export type UpdateIngredientSchema = z.TypeOf<typeof updateIngredientSchema>;
+export type GetRecipeSchema = z.TypeOf<typeof getRecipeSchema>;
+export type CreateRecipeSchema = z.TypeOf<typeof createRecipeSchema>;
+export type DeleteRecipeSchema = z.TypeOf<typeof deleteRecipeSchema>;
+export type UpdateRecipeSchema = z.TypeOf<typeof updateRecipeSchema>;

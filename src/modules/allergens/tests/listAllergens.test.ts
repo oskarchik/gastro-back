@@ -24,6 +24,10 @@ afterEach(() => {
   redis.flushdb();
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 describe('HAPPY PATH', () => {
   describe('no allergens in db', () => {
     it('should return an empty array and 200', async () => {

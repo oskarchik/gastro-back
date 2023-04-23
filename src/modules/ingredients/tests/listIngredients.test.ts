@@ -43,6 +43,10 @@ beforeEach(() => {
   redis.flushdb();
 });
 
+afterAll(async () => {
+  await redis.quit();
+});
+
 describe('HAPPY PATH', () => {
   describe('no ingredients in db', () => {
     it('should return 200 and an empty array', async () => {
