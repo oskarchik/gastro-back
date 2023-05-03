@@ -1,21 +1,7 @@
 import mongoose from 'mongoose';
-import { AllergenDocument } from '../allergens/allergens.model';
+import { IngredientDocument } from 'src/types/types';
 
 const { Schema, model } = mongoose;
-
-export interface IngredientInput {
-  name: string;
-  category: string;
-  hasAllergens: boolean;
-  allergens: [AllergenDocument['_id']];
-  allergenNames: string[];
-}
-
-export interface IngredientDocument extends IngredientInput, mongoose.Document {
-  _id: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 const ingredientSchema = new Schema(
   {
