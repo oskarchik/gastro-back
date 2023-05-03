@@ -1,16 +1,7 @@
 import mongoose from 'mongoose';
+import { AllergenDocument } from 'src/types/types';
 
 const { Schema, model } = mongoose;
-
-export interface AllergenInput {
-  name: string;
-  icon: string;
-}
-
-export interface AllergenDocument extends AllergenInput, mongoose.Document {
-  createdAt: Date;
-  updatedAt: Date;
-}
 
 const allergenSchema = new Schema(
   {
