@@ -1,25 +1,8 @@
 import mongoose from 'mongoose';
-import { AllergenDocument } from '../allergens/allergens.model';
-import { IngredientDocument } from '../ingredients/ingredients.model';
+import { RecipeDocument } from 'src/types/types';
 
 const { Schema, model } = mongoose;
 
-export interface RecipeInput {
-  name: string;
-  category: string;
-  subCategory: string;
-  ingredients: [IngredientDocument['_id']] | [];
-  ingredientNames: string[];
-  hasAllergens: boolean;
-  allergens: [AllergenDocument['_id']] | [];
-  allergenNames: string[];
-}
-
-export interface RecipeDocument extends RecipeInput, mongoose.Document {
-  _id: string;
-  createdAt: string;
-  updatedAt: string;
-}
 const recipeSchema = new Schema({
   name: {
     type: String,
@@ -84,4 +67,4 @@ recipeSchema.index({ name: 1 });
 recipeSchema.index({ category: 1 });
 recipeSchema.index({ subCategory: 1 });
 
-export const RecipeModel = model('Recipe', recipeSchema);
+export const RecipeModel = model<RecipeDocument>('Recipe', recipeSchema);
