@@ -1,6 +1,5 @@
 import { FilterQuery } from 'mongoose';
-import { IngredientInput } from 'src/modules/ingredients/ingredients.model';
-import { RecipeInput } from 'src/modules/recipes/recipes.model';
+import { IngredientInput, RecipeInput } from 'src/types/types';
 
 export const filterProperties = (propertiesToKeep: string[], object: any) => {
   const filteredObject: Partial<FilterQuery<IngredientInput | RecipeInput>> = {};
