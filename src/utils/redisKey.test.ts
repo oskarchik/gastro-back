@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import { redis } from './redis';
-import { createRedisKey, deleteRedisKeys, KeyFromQuery, updateRedisKeys } from './redisKey';
+import { createRedisKey, deleteRedisKeys, updateRedisKeys, deleteAllRedisKeys } from './redisKey';
+import { KeyFromQuery } from 'src/types/types';
 
 const queryObject: Partial<Request> = {
   params: {},
@@ -29,6 +30,9 @@ const DBDocument2 = {
   allergenNames: [],
 };
 
+beforeEach(async () => {
+  await redis.flushdb();
+});
 afterEach(() => {
   redis.flushdb();
 });
@@ -83,7 +87,6 @@ describe('create redisKey', () => {
 });
 describe('updated redisKeys', () => {
   it('should update record with id and remove the rest with given name in key', async () => {
-    redis.flushdb();
     const DB = [DBDocument1, DBDocument2];
     await Promise.all(
       DB.map(async (doc, i) => {
@@ -108,9 +111,25 @@ describe('updated redisKeys', () => {
     expect(updatedKeys.length).toEqual(1);
   });
 });
+describe('deleteAllRedisKeys', () => {
+  it('should delete all redis keys', async () => {
+    const DB = [DBDocument1, DBDocument2];
+    await Promise.all(
+      DB.map(async (doc, i) => {
+        if (i === 1) {
+          await redis.setex(`ingredients_${doc._id}`, 1000, JSON.stringify(doc));
+        }
+        await redis.setex(`ingredients`, 1000, JSON.stringify(doc));
+      })
+    );
+    await deleteAllRedisKeys('ingredients');
+    const result = await redis.keys('*');
+
+    expect(result.length).toBe(0);
+  });
+});
 describe('delete redisKeys', () => {
   it('should delete redis keys', async () => {
-    redis.flushdb();
     const DB = [DBDocument1, DBDocument2];
     await Promise.all(
       DB.map(async (doc, i) => {
