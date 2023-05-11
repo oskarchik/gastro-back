@@ -9,6 +9,7 @@ import {
   deleteRedisKeys,
   updateRedisKeys,
 } from 'src/utils/redisKey';
+import { Metadata, RecipeDocument } from 'src/types/types';
 import {
   createRecipe,
   getRecipeById,
@@ -19,7 +20,6 @@ import {
   removeRecipes,
   updateRecipe,
 } from './recipes.service';
-import { Metadata, RecipeDocument } from 'src/types/types';
 import { getPaginatedData } from 'src/middlewares/pagination.middleware';
 import { RecipeModel } from './recipes.model';
 

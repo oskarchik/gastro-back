@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
 import {
   findRecipeById,
   findRecipes,
@@ -16,7 +17,6 @@ import {
   getRecipeSchema,
   updateRecipeSchema,
 } from './recipes.schema';
-import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
 
 export const recipesRouter = Router();
 

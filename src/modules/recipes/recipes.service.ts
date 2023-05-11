@@ -1,7 +1,7 @@
 import { FilterQuery } from 'mongoose';
 import { Request } from 'express';
-import { RecipeModel } from './recipes.model';
 import { RecipeDocument, RecipeInput } from 'src/types/types';
+import { RecipeModel } from './recipes.model';
 
 const fieldsToReturn =
   '_id name category subcategory ingredients ingredientNames hasAllergens allergens allergenNames';
