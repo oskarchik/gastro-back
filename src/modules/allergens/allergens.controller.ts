@@ -1,8 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { isValidId } from 'src/utils/idValidation';
-import { ApiError } from '../../error/ApiError';
 import { redis } from 'src/utils/redis';
+import { getPaginatedData } from 'src/middlewares/pagination.middleware';
+import { filterProperties } from 'src/utils/filterProperties';
+import { Metadata, AllergenDocument } from 'src/types/types';
+import { deleteAllRedisKeys, deleteRedisKeys, updateRedisKeys } from 'src/utils/redisKey';
+import { ApiError } from '../../error/ApiError';
 import {
   getAllergens,
   getAllergenById,
@@ -13,11 +17,7 @@ import {
   removeAllergenByName,
   removeAllAllergens,
 } from './allergens.service';
-import { getPaginatedData } from 'src/middlewares/pagination.middleware';
 import { AllergenModel } from './allergens.model';
-import { filterProperties } from 'src/utils/filterProperties';
-import { Metadata, AllergenDocument } from 'src/types/types';
-import { deleteAllRedisKeys, deleteRedisKeys, updateRedisKeys } from 'src/utils/redisKey';
 
 export const findAllergens = async (req: Request, res: Response, next: NextFunction) => {
   const allergenName = req.query.name;

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
 import {
   findAllergens,
   findAllergenById,
@@ -17,7 +18,6 @@ import {
   deleteAllergenByIdSchema,
 } from './allergens.schema';
 import { cache } from 'src/middlewares/cache.middleware';
-import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
 
 export const allergensRouter = Router();
 

@@ -1,7 +1,7 @@
 import { FilterQuery } from 'mongoose';
 import { Request } from 'express';
-import { AllergenModel } from './allergens.model';
 import { AllergenDocument, AllergenInput } from 'src/types/types';
+import { AllergenModel } from './allergens.model';
 
 const fieldsToReturn = '_id name icon';
 
