@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable import/no-extraneous-dependencies */
 
+import { IngredientInput } from 'src/types/types';
 import {
   createIngredient,
   getIngredientById,
@@ -12,7 +13,6 @@ import {
   updateIngredient,
 } from '../ingredients.service';
 import { IngredientModel } from '../ingredients.model';
-import { IngredientInput } from 'src/types/types';
 
 jest.mock('../ingredients.model');
 

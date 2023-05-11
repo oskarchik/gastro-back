@@ -3,9 +3,9 @@
 
 import request from 'supertest';
 import { redis } from 'src/utils/redis';
+import { IngredientInput } from 'src/types/types';
 import { createApp } from '../../../app';
 import * as IngredientService from '../ingredients.service';
-import { IngredientInput } from 'src/types/types';
 
 const app = createApp();
 

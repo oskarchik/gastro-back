@@ -3,10 +3,10 @@
 
 import request from 'supertest';
 import { Model } from 'mongoose';
+import { IngredientInput } from 'src/types/types';
 import * as IngredientsService from '../ingredients.service';
 import { createApp } from '../../../app';
 import { redis } from 'src/utils/redis';
-import { IngredientInput } from 'src/types/types';
 
 const app = createApp();
 
