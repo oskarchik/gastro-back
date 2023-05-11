@@ -12,10 +12,10 @@ import {
   removeIngredientById,
   removeAllIngredients,
 } from './ingredients.service';
-import { IngredientModel } from './ingredients.model';
 import { getPaginatedData } from 'src/middlewares/pagination.middleware';
 import { IngredientDocument, Metadata } from 'src/types/types';
 import { deleteAllRedisKeys, deleteRedisKeys, updateRedisKeys } from 'src/utils/redisKey';
+import { IngredientModel } from './ingredients.model';
 
 export const findIngredients = async (req: Request, res: Response, next: NextFunction) => {
   const { allergenNames } = req.query;

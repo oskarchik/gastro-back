@@ -1,7 +1,7 @@
 import { FilterQuery } from 'mongoose';
 import { Request } from 'express';
-import { IngredientModel } from './ingredients.model';
 import { IngredientDocument, IngredientInput } from 'src/types/types';
+import { IngredientModel } from './ingredients.model';
 
 const fieldsToReturn = '_id name category hasAllergens allergenNames allergens';
 
