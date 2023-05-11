@@ -4,8 +4,8 @@
 import request from 'supertest';
 import { redis } from 'src/utils/redis';
 import { createApp } from '../../../app';
-import { IngredientInput } from '../ingredients.model';
 import * as IngredientService from '../ingredients.service';
+import { IngredientInput } from 'src/types/types';
 
 const app = createApp();
 
