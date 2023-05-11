@@ -1,7 +1,7 @@
 import { Request } from 'express';
+import { KeyFromQuery } from 'src/types/types';
 import { redis } from './redis';
 import { createRedisKey, deleteRedisKeys, updateRedisKeys, deleteAllRedisKeys } from './redisKey';
-import { KeyFromQuery } from 'src/types/types';
 
 const queryObject: Partial<Request> = {
   params: {},
