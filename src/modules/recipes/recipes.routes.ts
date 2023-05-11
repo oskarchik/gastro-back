@@ -16,10 +16,11 @@ import {
   getRecipeSchema,
   updateRecipeSchema,
 } from './recipes.schema';
+import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
 
 export const recipesRouter = Router();
 
-recipesRouter.get('/', validate(getRecipeSchema), cache, findRecipes);
+recipesRouter.get('/', validate(getRecipeSchema), cache, paginationMiddleware(), findRecipes);
 recipesRouter.get('/:id', validate(getRecipeSchema), cache, findRecipeById);
 
 recipesRouter.post('/', validate(createRecipeSchema), makeRecipe);

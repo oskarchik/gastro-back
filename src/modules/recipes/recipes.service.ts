@@ -1,12 +1,19 @@
 import { FilterQuery } from 'mongoose';
-import { RecipeModel, RecipeDocument, RecipeInput } from './recipes.model';
+import { Request } from 'express';
+import { RecipeModel } from './recipes.model';
+import { RecipeDocument, RecipeInput } from 'src/types/types';
 
 const fieldsToReturn =
   '_id name category subcategory ingredients ingredientNames hasAllergens allergens allergenNames';
 
-export const getRecipes = async (query: FilterQuery<RecipeInput>) => {
+export const getRecipes = async (
+  query: FilterQuery<RecipeInput>,
+  pagination: Request['pagination']
+) => {
+  const { offset, limit } = pagination;
+
   try {
-    return await RecipeModel.find(query).select(fieldsToReturn);
+    return await RecipeModel.find(query).skip(offset).limit(limit).select(fieldsToReturn);
   } catch (error) {
     return error;
   }
@@ -20,18 +27,25 @@ export const getRecipeById = async (id: RecipeDocument['_id']) => {
   }
 };
 
-export const getRecipesWithName = async (name: RegExp) => {
+export const getRecipesWithName = async (name: RegExp, pagination: Request['pagination']) => {
+  const { offset, limit } = pagination;
   try {
-    const result = await RecipeModel.find({ name });
-    return result;
+    return await RecipeModel.find({ name }).skip(offset).limit(limit).select(fieldsToReturn);
   } catch (error) {
     return error;
   }
 };
 
-export const getRecipesByAllergen = async (allergens: FilterQuery<RecipeInput>) => {
+export const getRecipesByAllergen = async (
+  allergens: FilterQuery<RecipeInput>,
+  pagination: Request['pagination']
+) => {
+  const { offset, limit } = pagination;
   try {
-    const result = await RecipeModel.find({ allergenNames: { $in: allergens } });
+    const result = await RecipeModel.find({ allergenNames: { $in: allergens } })
+      .skip(offset)
+      .limit(limit)
+      .select(fieldsToReturn);
     return result;
   } catch (error) {
     return error;
