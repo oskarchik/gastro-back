@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable import/no-extraneous-dependencies */
 import request from 'supertest';
+import { Model, Query } from 'mongoose';
 import * as RecipesService from '../recipes.service';
 import { createApp } from 'src/app';
-import { RecipeInput } from '../recipes.model';
 import { redis } from 'src/utils/redis';
+import { RecipeInput } from 'src/types/types';
 
 const app = createApp();
 
@@ -39,6 +40,11 @@ const getRecipesWithNameServiceMock = jest.spyOn(RecipesService, 'getRecipesWith
 const getRecipesByAllergenServiceMock = jest.spyOn(RecipesService, 'getRecipesByAllergen');
 const getRecipesByIdServiceMock = jest.spyOn(RecipesService, 'getRecipeById');
 
+const countDocumentMock = jest.spyOn(Model, 'countDocuments');
+
+beforeEach(() => {
+  redis.flushdb();
+});
 afterEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
@@ -53,11 +59,16 @@ describe('HAPPY PATH', () => {
     it('should return 200 and an empty array', async () => {
       // @ts-ignore
       getRecipesServiceMock.mockReturnValueOnce([]);
+      countDocumentMock.mockReturnValueOnce(0 as unknown as Query<number, unknown>);
       const { statusCode, body } = await request(app).get(baseApiUrl);
 
       expect(statusCode).toBe(200);
       expect(body.data).toBeInstanceOf(Array);
-      expect(getRecipesServiceMock).toHaveBeenNthCalledWith(1, {});
+      expect(getRecipesServiceMock).toHaveBeenNthCalledWith(
+        1,
+        {},
+        { page: 1, limit: 10, offset: 0 }
+      );
     });
   });
 
@@ -70,7 +81,11 @@ describe('HAPPY PATH', () => {
 
       expect(statusCode).toBe(200);
       expect(body.data).toBeInstanceOf(Array);
-      expect(getRecipesServiceMock).toHaveBeenNthCalledWith(1, {});
+      expect(getRecipesServiceMock).toHaveBeenNthCalledWith(
+        1,
+        {},
+        { page: 1, limit: 10, offset: 0 }
+      );
     });
   });
 
@@ -84,7 +99,11 @@ describe('HAPPY PATH', () => {
       expect(statusCode).toBe(200);
       expect(body.data).toBeInstanceOf(Array);
       expect(body.data.length).toBe(2);
-      expect(getRecipesWithNameServiceMock).toHaveBeenNthCalledWith(1, /pa/);
+      expect(getRecipesWithNameServiceMock).toHaveBeenNthCalledWith(1, /pa/, {
+        page: 1,
+        limit: 10,
+        offset: 0,
+      });
     });
   });
   describe('recipes by allergen', () => {
@@ -98,7 +117,11 @@ describe('HAPPY PATH', () => {
 
       expect(statusCode).toBe(200);
       expect(body.data).toBeInstanceOf(Array);
-      expect(getRecipesByAllergenServiceMock).toHaveBeenNthCalledWith(1, ['fish']);
+      expect(getRecipesByAllergenServiceMock).toHaveBeenNthCalledWith(1, ['fish'], {
+        page: 1,
+        limit: 10,
+        offset: 0,
+      });
     });
   });
   describe('recipe by id', () => {
@@ -124,7 +147,11 @@ describe('UNHAPPY PATH', () => {
 
       expect(statusCode).toBe(500);
       expect(body.error).toMatch(/unexpected internal error/i);
-      expect(getRecipesServiceMock).toHaveBeenNthCalledWith(1, {});
+      expect(getRecipesServiceMock).toHaveBeenNthCalledWith(
+        1,
+        {},
+        { page: 1, limit: 10, offset: 0 }
+      );
     });
   });
 
@@ -137,7 +164,11 @@ describe('UNHAPPY PATH', () => {
 
       expect(statusCode).toBe(500);
       expect(body.error).toMatch(/unexpected internal error/i);
-      expect(getRecipesWithNameServiceMock).toHaveBeenNthCalledWith(1, /pa/);
+      expect(getRecipesWithNameServiceMock).toHaveBeenNthCalledWith(1, /pa/, {
+        page: 1,
+        limit: 10,
+        offset: 0,
+      });
     });
     it('should return 500 when error while getting recipes by allergen', async () => {
       // @ts-ignore
@@ -149,7 +180,11 @@ describe('UNHAPPY PATH', () => {
 
       expect(statusCode).toBe(500);
       expect(body.error).toMatch(/unexpected internal error/i);
-      expect(getRecipesByAllergenServiceMock).toHaveBeenNthCalledWith(1, ['fish']);
+      expect(getRecipesByAllergenServiceMock).toHaveBeenNthCalledWith(1, ['fish'], {
+        page: 1,
+        limit: 10,
+        offset: 0,
+      });
     });
     it('should return 500 when error while getting recipes by id', async () => {
       // @ts-ignore
