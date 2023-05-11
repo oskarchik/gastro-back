@@ -2,23 +2,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import request from 'supertest';
 import { Model, Query } from 'mongoose';
-import { RecipeInput } from 'src/types/types';
-import * as RecipesService from '../recipes.service';
-import { createApp } from 'src/app';
 import { redis } from 'src/utils/redis';
+import { createApp } from 'src/app';
+import * as RecipesService from '../recipes.service';
 
 const app = createApp();
-
-const recipeInput: RecipeInput = {
-  name: 'paella',
-  category: 'main',
-  subCategory: 'rice',
-  ingredients: ['639eea5a049fc933bddebab2'],
-  ingredientNames: ['rice', 'green beans', 'chicken'],
-  hasAllergens: false,
-  allergens: [],
-  allergenNames: [],
-};
 
 const recipePayload = {
   _id: '639eea5a049fc933bddebab2',

@@ -33,7 +33,6 @@ afterAll(async () => {
 
 describe('allergens', () => {
   describe('POST/allergen', () => {
-    createAllergenServiceMock;
     it('should return allergen payload', async () => {
       // @ts-ignore
       createAllergenServiceMock.mockReturnValueOnce(allergenPayload);

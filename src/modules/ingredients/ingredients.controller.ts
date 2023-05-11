@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { filterProperties } from 'src/utils/filterProperties';
 import { isValidId } from 'src/utils/idValidation';
-import { ApiError } from '../../error/ApiError';
 import { redis } from 'src/utils/redis';
+import { ApiError } from '../../error/ApiError';
 import {
   getIngredients,
   getIngredientById,

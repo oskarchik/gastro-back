@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { isValidId } from 'src/utils/idValidation';
-import { redis } from 'src/utils/redis';
 import { getPaginatedData } from 'src/middlewares/pagination.middleware';
 import { filterProperties } from 'src/utils/filterProperties';
 import { Metadata, AllergenDocument } from 'src/types/types';
 import { deleteAllRedisKeys, deleteRedisKeys, updateRedisKeys } from 'src/utils/redisKey';
+import { redis } from 'src/utils/redis';
 import { ApiError } from '../../error/ApiError';
 import {
   getAllergens,
