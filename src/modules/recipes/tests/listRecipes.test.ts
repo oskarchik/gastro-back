@@ -2,10 +2,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import request from 'supertest';
 import { Model, Query } from 'mongoose';
+import { RecipeInput } from 'src/types/types';
 import * as RecipesService from '../recipes.service';
 import { createApp } from 'src/app';
 import { redis } from 'src/utils/redis';
-import { RecipeInput } from 'src/types/types';
 
 const app = createApp();
 

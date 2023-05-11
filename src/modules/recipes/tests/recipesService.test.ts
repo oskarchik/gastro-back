@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { RecipeInput } from 'src/types/types';
 import {
   getRecipes,
   getRecipeById,
@@ -10,7 +11,6 @@ import {
   getRecipesByAllergen,
 } from '../recipes.service';
 import { RecipeModel } from '../recipes.model';
-import { RecipeInput } from 'src/types/types';
 
 jest.mock('../recipes.model');
 
