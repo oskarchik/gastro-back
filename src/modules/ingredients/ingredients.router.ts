@@ -17,10 +17,17 @@ import {
   updateIngredientSchema,
 } from './ingredients.schema';
 import { cache } from 'src/middlewares/cache.middleware';
+import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
 
 export const ingredientsRouter = Router();
 
-ingredientsRouter.get('/', validate(getIngredientSchema), cache, findIngredients);
+ingredientsRouter.get(
+  '/',
+  validate(getIngredientSchema),
+  paginationMiddleware(),
+  cache,
+  findIngredients
+);
 ingredientsRouter.get('/:id', validate(getIngredientByIdSchema), cache, findIngredientById);
 
 ingredientsRouter.post('/', validate(createIngredientSchema), makeIngredient);

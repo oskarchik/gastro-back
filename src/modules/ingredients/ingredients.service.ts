@@ -1,11 +1,18 @@
 import { FilterQuery } from 'mongoose';
-import { IngredientModel, IngredientDocument, IngredientInput } from './ingredients.model';
+import { Request } from 'express';
+import { IngredientModel } from './ingredients.model';
+import { IngredientDocument, IngredientInput } from 'src/types/types';
 
 const fieldsToReturn = '_id name category hasAllergens allergenNames allergens';
 
-export const getIngredients = async (query: FilterQuery<IngredientInput>) => {
+export const getIngredients = async (
+  query: FilterQuery<IngredientInput>,
+  pagination: Request['pagination']
+) => {
+  const { limit, offset } = pagination;
+
   try {
-    return await IngredientModel.find(query).select(fieldsToReturn);
+    return await IngredientModel.find(query).skip(offset).limit(limit).select(fieldsToReturn);
   } catch (error) {
     return error;
   }
@@ -19,9 +26,17 @@ export const getIngredientById = async (id: IngredientDocument['_id']) => {
   }
 };
 
-export const getIngredientsByAllergen = async (allergens: FilterQuery<IngredientInput>) => {
+export const getIngredientsByAllergen = async (
+  allergens: FilterQuery<IngredientInput>,
+  pagination: Request['pagination']
+) => {
+  const { limit, offset } = pagination;
+
   try {
-    return await IngredientModel.find({ allergenNames: { $in: allergens } }).select(fieldsToReturn);
+    return await IngredientModel.find({ allergenNames: { $in: allergens } })
+      .skip(offset)
+      .limit(limit)
+      .select(fieldsToReturn);
   } catch (error) {
     return error;
   }
