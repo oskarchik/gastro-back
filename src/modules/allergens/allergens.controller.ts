@@ -13,31 +13,55 @@ import {
   removeAllergenByName,
   removeAllAllergens,
 } from './allergens.service';
+import { getPaginatedData } from 'src/middlewares/pagination.middleware';
+import { AllergenModel } from './allergens.model';
+import { filterProperties } from 'src/utils/filterProperties';
+import { Metadata, AllergenDocument } from 'src/types/types';
+import { deleteAllRedisKeys, deleteRedisKeys, updateRedisKeys } from 'src/utils/redisKey';
 
 export const findAllergens = async (req: Request, res: Response, next: NextFunction) => {
   const allergenName = req.query.name;
-  const { query } = req;
+  const { query, pagination } = req;
+
+  const property = ['name'];
+
+  const filteredQuery = filterProperties(property, req.query);
+
+  let info: Metadata | undefined;
+  try {
+    info = await getPaginatedData(AllergenModel, filteredQuery, req, req.originalUrl);
+  } catch (error) {
+    return next(error);
+  }
 
   if (allergenName) {
     try {
-      const foundAllergens = await getAllergensByName(String(allergenName));
+      const foundAllergens = await getAllergensByName(String(allergenName), pagination);
       if (!foundAllergens) {
         return next(ApiError.notFound('not allergen found with given name'));
       }
 
-      redis.setex(`allergens_${allergenName}`, 3600, JSON.stringify(foundAllergens));
+      redis.setex(
+        `allergens_${allergenName}_limit=${pagination.limit}_page=${pagination.page}`,
+        3600,
+        JSON.stringify(foundAllergens)
+      );
 
-      return res.status(200).send({ data: foundAllergens });
+      return res.status(200).send({ info, data: foundAllergens });
     } catch (error) {
       return next(error);
     }
   }
   try {
-    const foundAllergens = await getAllergens(query);
+    const foundAllergens = await getAllergens(query, pagination);
 
-    redis.setex(`allergens`, 3600, JSON.stringify(foundAllergens));
+    redis.setex(
+      `allergens_limit=${pagination.limit}_page=${pagination.page}`,
+      3600,
+      JSON.stringify(foundAllergens)
+    );
 
-    return res.status(200).send({ data: foundAllergens });
+    return res.status(200).send({ info, data: foundAllergens });
   } catch (error) {
     return next(error);
   }
@@ -57,7 +81,7 @@ export const findAllergenById = async (req: Request, res: Response, next: NextFu
       return next(ApiError.notFound('Allergen not found'));
     }
 
-    redis.setex(`allergens_${allergenId}`, 3600, JSON.stringify(foundAllergen));
+    redis.setex(`allergensId_${allergenId}`, 3600, JSON.stringify(foundAllergen));
     return res.status(200).send({ data: foundAllergen });
   } catch (error) {
     return next(error);
@@ -72,6 +96,7 @@ export const makeAllergen = async (req: Request, res: Response, next: NextFuncti
   try {
     const savedAllergen = await createAllergen({ name, icon });
 
+    await deleteRedisKeys('allergens');
     return res.status(200).send({ data: savedAllergen });
   } catch (error) {
     return next(error);
@@ -97,6 +122,11 @@ export const patchAllergen = async (req: Request, res: Response, next: NextFunct
       return next(ApiError.notFound('allergen not found to update'));
     }
 
+    await updateRedisKeys({
+      controller: 'allergens',
+      document: updatedAllergen as AllergenDocument,
+    });
+
     return res.status(200).send({ data: updatedAllergen });
   } catch (error) {
     return next(error);
@@ -120,6 +150,7 @@ export const deleteAllAllergens = async (req: Request, res: Response, next: Next
   }
   try {
     await removeAllAllergens();
+    await deleteAllRedisKeys('allergens');
 
     return res.status(200).send({ message: 'Deleted all allergens' });
   } catch (error) {
@@ -140,6 +171,8 @@ export const deleteAllergenById = async (req: Request, res: Response, next: Next
     if (deletedAllergen === null) {
       return next(ApiError.notFound('Allergen not found to delete'));
     }
+
+    await deleteAllRedisKeys('allergens');
 
     return res.status(200).send({ message: `Deleted allergen ${allergenId}` });
   } catch (error) {

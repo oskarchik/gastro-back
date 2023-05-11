@@ -17,11 +17,12 @@ import {
   deleteAllergenByIdSchema,
 } from './allergens.schema';
 import { cache } from 'src/middlewares/cache.middleware';
+import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
 
 export const allergensRouter = Router();
 
 allergensRouter.get('/:id', validate(getAllergensByIdSchema), cache, findAllergenById);
-allergensRouter.get('/', validate(getAllergenSchema), cache, findAllergens);
+allergensRouter.get('/', validate(getAllergenSchema), cache, paginationMiddleware(), findAllergens);
 
 allergensRouter.post('/', validate(creteAllergenSchema), makeAllergen);
 
