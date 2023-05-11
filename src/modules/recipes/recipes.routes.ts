@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
 import {
   findRecipeById,
   findRecipes,
@@ -19,7 +20,7 @@ import {
 
 export const recipesRouter = Router();
 
-recipesRouter.get('/', validate(getRecipeSchema), cache, findRecipes);
+recipesRouter.get('/', validate(getRecipeSchema), cache, paginationMiddleware(), findRecipes);
 recipesRouter.get('/:id', validate(getRecipeSchema), cache, findRecipeById);
 
 recipesRouter.post('/', validate(createRecipeSchema), makeRecipe);

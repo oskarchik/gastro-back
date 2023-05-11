@@ -31,11 +31,12 @@ beforeEach(() => {
 });
 
 describe('allergens service', () => {
+  const pagination = { page: 1, limit: 10, offset: 0 };
   describe('getAllergens', () => {
     it('should call allergenModel.find', async () => {
       const getAllergenSpy = jest.spyOn(AllergenModel, 'find');
 
-      getAllergens({});
+      getAllergens({}, pagination);
       expect(getAllergenSpy).toHaveBeenCalledTimes(1);
     });
   });
@@ -54,7 +55,7 @@ describe('allergens service', () => {
     it('should call allergenModel.find', async () => {
       const getAllergensByNameSpy = jest.spyOn(AllergenModel, 'find');
 
-      await getAllergensByName(allergenInput.name);
+      await getAllergensByName(allergenInput.name, pagination);
 
       expect(getAllergensByNameSpy).toHaveBeenCalledTimes(1);
     });

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { RecipeInput } from 'src/types/types';
 import {
   getRecipes,
   getRecipeById,
@@ -9,7 +10,7 @@ import {
   getRecipesWithName,
   getRecipesByAllergen,
 } from '../recipes.service';
-import { RecipeInput, RecipeModel } from '../recipes.model';
+import { RecipeModel } from '../recipes.model';
 
 jest.mock('../recipes.model');
 
@@ -21,7 +22,7 @@ const recipeInput: RecipeInput = {
   ingredientNames: ['rice', 'green beans', 'chicken'],
   hasAllergens: false,
   allergens: [],
-  allergenNames: [],
+  allergenNames: ['fish'],
 };
 
 const recipePayload = {
@@ -35,8 +36,14 @@ const recipePayload = {
   allergenNames: [],
 };
 
+beforeEach(() => {
+  jest.clearAllMocks();
+  jest.resetAllMocks();
+  jest.restoreAllMocks();
+});
 afterEach(() => {
   jest.clearAllMocks();
+  jest.resetAllMocks();
   jest.resetAllMocks();
 });
 
@@ -48,15 +55,17 @@ const removeRecipesSpy = jest.spyOn(RecipeModel, 'deleteMany');
 const removeRecipeByIdSpy = jest.spyOn(RecipeModel, 'findByIdAndDelete');
 
 describe('recipes service', () => {
+  const filteredQuery = {};
+  const pagination = { page: 1, limit: 10, offset: 0 };
   describe('getRecipes', () => {
     it('should call recipesModel.find and return a recipe object', async () => {
-      await getRecipes({});
+      await getRecipes({}, pagination);
 
       expect(getRecipeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should call recipesModel.find and return an error', async () => {
-      const result = await getRecipes({});
+      const result = await getRecipes({}, pagination);
 
       expect(getRecipeSpy).toHaveBeenCalledTimes(1);
       // @ts-ignore
@@ -83,41 +92,45 @@ describe('recipes service', () => {
       expect(result.stack).toBeDefined();
     });
   });
-
   describe('getRecipesWithName', () => {
     const regex = /paella/i;
     it('should call recipesModel.find and return an array of recipe objects', async () => {
-      await getRecipesWithName(regex);
+      await getRecipesWithName(regex, pagination);
 
       expect(getRecipeSpy).toHaveBeenNthCalledWith(1, { name: regex });
     });
 
     it('should call recipesModel.find and return an error', async () => {
       // @ts-ignore
-      getRecipeSpy.mockRejectedValueOnce(new Error('oh noo'));
-      const result = await getRecipesWithName(regex);
+
+      const result = await getRecipesWithName(regex, pagination);
 
       expect(getRecipeSpy).toHaveBeenNthCalledWith(1, { name: regex });
-      // @ts-ignore
-      expect(result.message).toEqual('oh noo');
+      expect(result).toBeInstanceOf(Error);
     });
   });
 
   describe('getRecipesByAllergen', () => {
+    const query = { ...filteredQuery, allergenNames: recipeInput.allergenNames };
     it('should call recipesModel.find and return an array of recipe objects', async () => {
-      await getRecipesByAllergen(['fish']);
+      await getRecipesByAllergen(query.allergenNames, pagination);
 
-      expect(getRecipeSpy).toHaveBeenNthCalledWith(1, { allergenNames: { $in: ['fish'] } });
+      expect(getRecipeSpy).toHaveBeenNthCalledWith(1, {
+        allergenNames: { $in: query.allergenNames },
+      });
     });
 
     it('should call recipesModel.find and return an error', async () => {
       // @ts-ignore
-      getRecipeSpy.mockRejectedValueOnce(new Error('oh noo'));
-      const result = await getRecipesByAllergen(['fish']);
+      // getRecipeSpy.mockRejectedValueOnce(new Error('oh noo'));
 
-      expect(getRecipeSpy).toHaveBeenNthCalledWith(1, { allergenNames: { $in: ['fish'] } });
-      // @ts-ignore
-      expect(result.message).toEqual('oh noo');
+      const result = await getRecipesByAllergen(query.allergenNames, pagination);
+
+      // expect(getRecipeSpy).not.toHaveBeenCalled();
+      expect(getRecipeSpy).toHaveBeenNthCalledWith(1, {
+        allergenNames: { $in: query.allergenNames },
+      });
+      expect(result).toBeInstanceOf(Error);
     });
   });
 

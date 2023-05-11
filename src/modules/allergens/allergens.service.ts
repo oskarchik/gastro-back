@@ -1,11 +1,17 @@
 import { FilterQuery } from 'mongoose';
-import { AllergenModel, AllergenDocument, AllergenInput } from './allergens.model';
+import { Request } from 'express';
+import { AllergenDocument, AllergenInput } from 'src/types/types';
+import { AllergenModel } from './allergens.model';
 
 const fieldsToReturn = '_id name icon';
 
-export const getAllergens = async (query: FilterQuery<AllergenInput>) => {
+export const getAllergens = async (
+  query: FilterQuery<AllergenInput>,
+  pagination: Request['pagination']
+) => {
+  const { limit, offset } = pagination;
   try {
-    return await AllergenModel.find(query).select(fieldsToReturn);
+    return await AllergenModel.find(query).skip(offset).limit(limit).select(fieldsToReturn);
   } catch (error) {
     return error;
   }
@@ -19,9 +25,16 @@ export const getAllergenById = async (allergenId: AllergenDocument['_id']) => {
   }
 };
 
-export const getAllergensByName = async (allergenName: AllergenDocument['name']) => {
+export const getAllergensByName = async (
+  allergenName: AllergenDocument['name'],
+  pagination: Request['pagination']
+) => {
+  const { limit, offset } = pagination;
   try {
-    return await AllergenModel.find({ name: allergenName }).select(fieldsToReturn);
+    return await AllergenModel.find({ name: allergenName })
+      .skip(offset)
+      .limit(limit)
+      .select(fieldsToReturn);
   } catch (error) {
     return error;
   }

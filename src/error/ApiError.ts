@@ -1,4 +1,5 @@
-import { BaseError, HttpCode } from './BaseError';
+import { HttpCode } from 'src/types/types';
+import { BaseError } from './BaseError';
 
 export class ApiError extends BaseError {
   constructor(httpCode: number, message: string, isOperational: boolean) {

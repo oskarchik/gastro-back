@@ -15,7 +15,8 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules", "build", "coverage"],
   "include": ["src", "__tests__"]

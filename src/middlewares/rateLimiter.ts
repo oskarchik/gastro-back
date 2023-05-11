@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
+import { Limiter } from 'src/types/types';
 import { redis } from 'src/utils/redis';
 
-export interface Limiter {
-  windowSize: number;
-  allowedRequests: number;
-}
 export const rateLimiter =
   ({ windowSize, allowedRequests }: Limiter) =>
   async (req: Request, res: Response, next: NextFunction) => {

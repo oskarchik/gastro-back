@@ -2,6 +2,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import request from 'supertest';
+import { Model, Query } from 'mongoose';
 import { redis } from 'src/utils/redis';
 import { createApp } from '../../../app';
 import * as AllergenService from '../allergens.service';
@@ -18,6 +19,13 @@ const getAllergenServiceMock = jest.spyOn(AllergenService, 'getAllergens');
 const getAllergenByNameServiceMock = jest.spyOn(AllergenService, 'getAllergensByName');
 const getAllergenByIdServiceMock = jest.spyOn(AllergenService, 'getAllergenById');
 
+const countDocumentMock = jest.spyOn(Model, 'countDocuments');
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  jest.resetAllMocks();
+  redis.flushdb();
+});
 afterEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
@@ -33,6 +41,7 @@ describe('HAPPY PATH', () => {
     it('should return an empty array and 200', async () => {
       // @ts-ignore
       getAllergenServiceMock.mockReturnValueOnce([]);
+      countDocumentMock.mockReturnValueOnce(0 as unknown as Query<number, unknown>);
       const { statusCode, body } = await request(app).get('/api/v1/allergens');
 
       expect(statusCode).toBe(200);
