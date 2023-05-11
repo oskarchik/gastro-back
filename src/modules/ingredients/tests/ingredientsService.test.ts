@@ -11,7 +11,8 @@ import {
   removeIngredientsByAllergen,
   updateIngredient,
 } from '../ingredients.service';
-import { IngredientInput, IngredientModel } from '../ingredients.model';
+import { IngredientModel } from '../ingredients.model';
+import { IngredientInput } from 'src/types/types';
 
 jest.mock('../ingredients.model');
 
@@ -41,6 +42,8 @@ const removeAllIngredientsSpy = jest.spyOn(IngredientModel, 'deleteMany');
 const removeIngredientByIdSpy = jest.spyOn(IngredientModel, 'findByIdAndDelete');
 
 describe('ingredients service', () => {
+  const filteredQuery = {};
+  const pagination = { page: 1, limit: 10, offset: 0 };
   describe('createIngredient', () => {
     it('should call ingredientModel.create with given ingredient input', async () => {
       await createIngredient(ingredientInput);
@@ -61,9 +64,10 @@ describe('ingredients service', () => {
 
   describe('getAllergenicIngredients', () => {
     it('should call ingredientsModel.find with given allergen name', async () => {
+      const query = { ...filteredQuery, hasAllergens: true };
       const getAllergenicIngredientsSpy = jest.spyOn(IngredientModel, 'find');
 
-      await getIngredients({ hasAllergens: ingredientInput.hasAllergens });
+      await getIngredients(query, pagination);
 
       expect(getAllergenicIngredientsSpy).toHaveBeenNthCalledWith(1, {
         hasAllergens: ingredientInput.hasAllergens,
@@ -84,7 +88,7 @@ describe('ingredients service', () => {
     it('should call ingredientModel.find', async () => {
       const getIngredientsSpy = jest.spyOn(IngredientModel, 'find');
 
-      await getIngredients({});
+      await getIngredients({}, pagination);
       expect(getIngredientsSpy).toHaveBeenCalledTimes(1);
     });
   });
@@ -92,11 +96,11 @@ describe('ingredients service', () => {
   describe('getIngredientsByAllergen', () => {
     it('should call ingredientModel.find with given allergen name', async () => {
       const getIngredientByAllergenSpy = jest.spyOn(IngredientModel, 'find');
-
-      await getIngredientsByAllergen(ingredientInput.allergenNames);
+      const query = { ...filteredQuery, allergenNames: ingredientInput.allergenNames };
+      await getIngredientsByAllergen(query.allergenNames, pagination);
 
       expect(getIngredientByAllergenSpy).toHaveBeenNthCalledWith(1, {
-        allergenNames: { $in: ingredientInput.allergenNames },
+        allergenNames: { $in: query.allergenNames },
       });
     });
   });
@@ -104,8 +108,8 @@ describe('ingredients service', () => {
   describe('getIngredientsByName', () => {
     it('should call ingredientModel.find with given ingredient name', async () => {
       const getIngredientByNameSpy = jest.spyOn(IngredientModel, 'find');
-
-      await getIngredients({ name: ingredientInput.name });
+      const query = { ...filteredQuery, name: ingredientInput.name };
+      await getIngredients(query, pagination);
 
       expect(getIngredientByNameSpy).toHaveBeenNthCalledWith(1, { name: ingredientInput.name });
     });
@@ -115,7 +119,8 @@ describe('ingredients service', () => {
     it('should call ingredientModel.find with given category name', async () => {
       const getIngredientByCategorySpy = jest.spyOn(IngredientModel, 'find');
 
-      await getIngredients({ category: ingredientInput.category });
+      const query = { ...filteredQuery, category: ingredientInput.category };
+      await getIngredients(query, pagination);
 
       expect(getIngredientByCategorySpy).toHaveBeenNthCalledWith(1, {
         category: ingredientInput.category,
