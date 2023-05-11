@@ -22,6 +22,11 @@ const baseApiUrl = '/api/v1/ingredients';
 const deleteIngredientsServiceMock = jest.spyOn(IngredientsService, 'removeAllIngredients');
 const deleteIngredientByIdServiceMock = jest.spyOn(IngredientsService, 'removeIngredientById');
 
+beforeEach(() => {
+  jest.clearAllMocks();
+  jest.resetAllMocks();
+  redis.flushdb();
+});
 afterEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
