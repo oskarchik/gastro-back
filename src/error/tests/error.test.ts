@@ -1,7 +1,15 @@
 import { Request, Response } from 'express';
-import { ApiError } from './ApiError';
-import { BaseError } from './BaseError';
-import { errorHandler, isTrustedError } from './error-handler';
+import { ApiError } from '../ApiError';
+import { BaseError } from '../BaseError';
+import { errorHandler, isTrustedError } from '../error-handler';
+import { Logger } from 'src/logger/logger';
+
+jest.spyOn(Logger, 'error');
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  jest.resetAllMocks();
+});
 
 describe('ApiError', () => {
   describe('bad request', () => {
@@ -72,6 +80,7 @@ describe('error handler', () => {
     expect(mockResponse.status).toHaveBeenCalledWith(500);
     expect(mockResponse.send).toHaveBeenCalledWith({ error: 'Unexpected internal error' });
     expect(mockNext).not.toHaveBeenCalled();
+    expect(Logger.error).not.toHaveBeenCalled();
   });
   it('should return 400 and bad request message', () => {
     const mockApiError = ApiError.badRequest('bad request');
@@ -87,6 +96,36 @@ describe('error handler', () => {
     expect(mockResponse.status).toHaveBeenCalledWith(400);
     expect(mockResponse.send).toHaveBeenCalledWith({ error: 'bad request' });
     expect(mockNext).not.toHaveBeenCalled();
+    expect(Logger.error).not.toHaveBeenCalled();
+  });
+  it('should return 500 and error handler message', () => {
+    process.env.NODE_ENV = 'development';
+    const mockError: Error = new Error('mock error');
+    const mockRequest = {} as Request;
+    const mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    } as unknown as Response;
+    const mockNext = jest.fn();
+    mockResponse.send(mockNext);
+
+    errorHandler(mockError, mockRequest, mockResponse, mockNext);
+    expect(Logger.error).toHaveBeenCalled();
+  });
+
+  it('should return 400 and bad request message', () => {
+    process.env.NODE_ENV = 'development';
+    const mockApiError = ApiError.badRequest('bad request');
+    const mockRequest = {} as Request;
+    const mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    } as unknown as Response;
+    const mockNext = jest.fn();
+    mockResponse.send(mockApiError);
+
+    errorHandler(mockApiError, mockRequest, mockResponse, mockNext);
+    expect(Logger.error).toHaveBeenCalled();
   });
 });
 
