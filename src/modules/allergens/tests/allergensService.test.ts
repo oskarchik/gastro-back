@@ -11,19 +11,12 @@ import {
   removeAllAllergens,
 } from '../allergens.service';
 import { AllergenModel } from '../allergens.model';
+import { createAllergenInput, createAllergenPayload } from './allergenMother';
 
 jest.mock('../allergens.model');
 
-const allergenInput = {
-  name: 'test',
-  icon: 'test allergen icon',
-};
-
-const allergenPayload = {
-  _id: '639eea5a049fc933bddebab2',
-  name: 'test',
-  icon: 'test allergen icon',
-};
+const allergenInput = createAllergenInput({});
+const allergenPayload = createAllergenPayload({});
 
 beforeEach(() => {
   jest.clearAllMocks();
