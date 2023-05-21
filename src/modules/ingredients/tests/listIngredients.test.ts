@@ -3,29 +3,15 @@
 
 import request from 'supertest';
 import { Model } from 'mongoose';
-import { IngredientInput } from 'src/types/types';
 import { redis } from 'src/utils/redis';
 import * as IngredientsService from '../ingredients.service';
 import { createApp } from '../../../app';
+import { createIngredientInput, createIngredientPayload } from './ingredientMother';
 
 const app = createApp();
 
-const ingredientInput: IngredientInput = {
-  name: 'ingredient 1',
-  category: 'eggs',
-  hasAllergens: true,
-  allergens: ['639eea5a049fc933bddebab3'],
-  allergenNames: ['celery'],
-};
-
-const ingredientPayload = {
-  _id: '639eea5a049fc933bddebab2',
-  name: 'ingredient 1',
-  category: 'eggs',
-  hasAllergens: true,
-  allergens: ['639eea5a049fc933bddebab3'],
-  allergenNames: ['celery'],
-};
+const ingredientInput = createIngredientInput({});
+const ingredientPayload = createIngredientPayload({});
 
 const baseApiUrl = '/api/v1/ingredients';
 

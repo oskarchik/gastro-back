@@ -14,7 +14,12 @@ import {
 } from './ingredients.service';
 import { getPaginatedData } from 'src/middlewares/pagination.middleware';
 import { IngredientDocument, Metadata } from 'src/types/types';
-import { deleteAllRedisKeys, deleteRedisKeys, updateRedisKeys } from 'src/utils/redisKey';
+import {
+  createRedisKey,
+  deleteAllRedisKeys,
+  deleteRedisKeys,
+  updateRedisKeys,
+} from 'src/utils/redisKey';
 import { IngredientModel } from './ingredients.model';
 
 export const findIngredients = async (req: Request, res: Response, next: NextFunction) => {
@@ -52,19 +57,29 @@ export const findIngredients = async (req: Request, res: Response, next: NextFun
   try {
     const foundIngredients = await getIngredients(filteredQuery, pagination);
 
-    Object.keys(filteredQuery).length > 0
-      ? redis.setex(
-          `ingredients_${Object.keys(filteredQuery)}_limit=${pagination.limit}_page=${
-            pagination.page
-          }`,
-          3600,
-          JSON.stringify(foundIngredients)
-        )
-      : redis.setex(
-          `ingredients_limit=${pagination.limit}_page=${pagination.page}`,
-          3600,
-          JSON.stringify(foundIngredients)
-        );
+    // Object.keys(filteredQuery).length > 0
+    //   ? redis.setex(
+    //       `ingredients_${Object.keys(filteredQuery)}_limit=${pagination.limit}_page=${
+    //         pagination.page
+    //       }`,
+    //       3600,
+    //       JSON.stringify(foundIngredients)
+    //     )
+    //   : redis.setex(
+    //       `ingredients_limit=${pagination.limit}_page=${pagination.page}`,
+    //       3600,
+    //       JSON.stringify(foundIngredients)
+    //     );
+    const redisKey = createRedisKey({
+      queryObject: filteredQuery,
+      controller: 'ingredients',
+    }) as string;
+
+    await redis.setex(
+      `${redisKey}_page=${pagination.page}_limit=${pagination.limit}`,
+      3600,
+      JSON.stringify(foundIngredients)
+    );
 
     return res.status(200).send({ info, data: foundIngredients });
   } catch (error) {
