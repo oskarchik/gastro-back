@@ -51,7 +51,7 @@ export interface IngredientInput {
   name: string;
   category: string;
   hasAllergens: boolean;
-  allergens: [AllergenDocument['_id']];
+  allergens: AllergenDocument['_id'][];
   allergenNames: string[];
 }
 
@@ -65,10 +65,10 @@ export interface RecipeInput {
   name: string;
   category: string;
   subCategory: string;
-  ingredients: [IngredientDocument['_id']] | [];
+  ingredients: IngredientDocument['_id'][] | [];
   ingredientNames: string[];
   hasAllergens: boolean;
-  allergens: [AllergenDocument['_id']] | [];
+  allergens: AllergenDocument['_id'][] | [];
   allergenNames: string[];
 }
 
