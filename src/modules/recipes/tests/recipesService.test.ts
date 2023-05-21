@@ -121,12 +121,8 @@ describe('recipes service', () => {
     });
 
     it('should call recipesModel.find and return an error', async () => {
-      // @ts-ignore
-      // getRecipeSpy.mockRejectedValueOnce(new Error('oh noo'));
-
       const result = await getRecipesByAllergen(query.allergenNames, pagination);
 
-      // expect(getRecipeSpy).not.toHaveBeenCalled();
       expect(getRecipeSpy).toHaveBeenNthCalledWith(1, {
         allergenNames: { $in: query.allergenNames },
       });
