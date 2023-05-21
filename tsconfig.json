@@ -16,7 +16,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   },
   "exclude": ["node_modules", "build", "coverage"],
   "include": ["src", "__tests__"]
