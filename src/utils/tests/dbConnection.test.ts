@@ -7,7 +7,7 @@ import { redis } from '../redis';
 
 const dbUri = config.get<string>('db_uri');
 const mockConnection = jest.spyOn(mongoose, 'connect');
-// const mockConnection = jest.spyOn(mongoose, 'connect');
+
 jest.spyOn(Logger, 'info');
 jest.spyOn(Logger, 'error');
 jest.spyOn(process, 'exit');
@@ -31,7 +31,6 @@ afterAll(async () => {
 });
 describe('db connection', () => {
   it('should connect successfully', async () => {
-    // const uri = 'jhjkhg:localhost:hgfd/test';
     const connectSpy = jest.spyOn(mongoose, 'connect');
     await dbConnect(dbUri);
     expect(connectSpy).toHaveBeenNthCalledWith(1, dbUri);

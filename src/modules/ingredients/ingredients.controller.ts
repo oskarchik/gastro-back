@@ -57,19 +57,6 @@ export const findIngredients = async (req: Request, res: Response, next: NextFun
   try {
     const foundIngredients = await getIngredients(filteredQuery, pagination);
 
-    // Object.keys(filteredQuery).length > 0
-    //   ? redis.setex(
-    //       `ingredients_${Object.keys(filteredQuery)}_limit=${pagination.limit}_page=${
-    //         pagination.page
-    //       }`,
-    //       3600,
-    //       JSON.stringify(foundIngredients)
-    //     )
-    //   : redis.setex(
-    //       `ingredients_limit=${pagination.limit}_page=${pagination.page}`,
-    //       3600,
-    //       JSON.stringify(foundIngredients)
-    //     );
     const redisKey = createRedisKey({
       queryObject: filteredQuery,
       controller: 'ingredients',

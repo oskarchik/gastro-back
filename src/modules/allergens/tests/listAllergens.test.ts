@@ -10,11 +10,6 @@ import { createAllergenPayload } from './allergenMother';
 
 const app = createApp();
 
-// const allergenPayload = {
-//   _id: '639eea5a049fc933bddebab2',
-//   name: 'test',
-//   icon: 'test allergen icon',
-// };
 const allergenPayload = createAllergenPayload({});
 
 const getAllergenServiceMock = jest.spyOn(AllergenService, 'getAllergens');
