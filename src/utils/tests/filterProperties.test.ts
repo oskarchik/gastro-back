@@ -1,4 +1,4 @@
-import { filterProperties } from './filterProperties';
+import { filterProperties } from '../filterProperties';
 
 const requestQueryMock = { name: 'test', hasAllergens: false };
 const properties = ['name', 'category', 'hasAllergens', 'allergens', 'allergenNames'];
