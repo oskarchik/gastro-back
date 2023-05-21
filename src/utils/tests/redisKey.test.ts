@@ -1,7 +1,13 @@
 import { Request } from 'express';
 import { KeyFromQuery } from 'src/types/types';
 import { redis } from '../redis';
-import { createRedisKey, deleteRedisKeys, updateRedisKeys, deleteAllRedisKeys } from '../redisKey';
+import {
+  createRedisKey,
+  deleteRedisKeys,
+  updateRedisKeys,
+  deleteAllRedisKeys,
+  formatRedisQuery,
+} from '../redisKey';
 
 const queryObject: Partial<Request> = {
   params: {},
@@ -59,7 +65,7 @@ describe('create redisKey', () => {
       queryObject: { ...object.queryObject, query: { name: 'mushroom' } },
     }) as string;
 
-    expect(result).toEqual('allergens_{"name":"mushroom"}');
+    expect(result).toEqual('allergens_name=mushroom');
   });
   it('should return allergens', () => {
     const result = createRedisKey({ ...object, controller: undefined });
@@ -82,7 +88,7 @@ describe('create redisKey', () => {
 
     const result = createRedisKey(paramObject);
 
-    expect(result).toEqual('recipes_{"name":"pa"}');
+    expect(result).toEqual('recipes_name=pa');
   });
 });
 describe('updated redisKeys', () => {
@@ -143,5 +149,15 @@ describe('delete redisKeys', () => {
     const result = await redis.keys('*ingredients*');
 
     expect(result.length).toBe(0);
+  });
+});
+
+describe('formatRedisQuery', () => {
+  it('should remove curly brackets and quotation marks and replace commas for underscores and colons for equal signs', () => {
+    const string = 'this is a {test} string: "one","two","three"';
+
+    const result = formatRedisQuery(string);
+
+    expect(result).toEqual('this is a test string= one_two_three');
   });
 });
