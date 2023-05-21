@@ -3,6 +3,9 @@ import { getRoute } from './getRoute';
 import { redis } from './redis';
 import { DeleteRedis, KeyFromQuery, UpdateRedis } from '../types/types';
 
+export const formatRedisQuery = (str: string): string => {
+  return str.replace(/[{}]/g, '').replace(/,/g, '_').replace(/"/g, '').replace(/:/g, '=');
+};
 export const createRedisKey = ({ queryObject, controller }: KeyFromQuery) => {
   const route = getRoute(queryObject.baseUrl) || controller;
 
@@ -10,11 +13,11 @@ export const createRedisKey = ({ queryObject, controller }: KeyFromQuery) => {
     return `${route}_${queryObject.params.id}`;
   }
   if (queryObject.query && Object.keys(queryObject.query).length > 0) {
-    return `${route}_${JSON.stringify(queryObject.query)}`;
+    return formatRedisQuery(`${route}_${JSON.stringify(queryObject.query)}`);
   }
   if (controller) {
     return Object.keys(queryObject).length > 0
-      ? `${controller}_${JSON.stringify(queryObject)}`
+      ? formatRedisQuery(`${controller}_${JSON.stringify(queryObject)}`)
       : controller;
   }
 
