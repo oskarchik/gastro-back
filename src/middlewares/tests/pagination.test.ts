@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import { Metadata } from 'src/types/types';
-import { getPaginatedData, paginationMiddleware } from './pagination.middleware';
+import { getPaginatedData, paginationMiddleware } from '../pagination.middleware';
 
 const model = mongoose.model('Test', new mongoose.Schema());
 const defaultPagination = {

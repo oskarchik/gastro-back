@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable import/no-extraneous-dependencies */
 
-import { IngredientInput } from 'src/types/types';
 import {
   createIngredient,
   getIngredientById,
@@ -13,24 +12,12 @@ import {
   updateIngredient,
 } from '../ingredients.service';
 import { IngredientModel } from '../ingredients.model';
+import { createIngredientInput, createIngredientPayload } from './ingredientMother';
 
 jest.mock('../ingredients.model');
 
-const ingredientInput: IngredientInput = {
-  name: 'ingredient 1',
-  category: 'category 1',
-  hasAllergens: true,
-  allergens: ['639eea5a049fc933bddebab5'],
-  allergenNames: ['allergen1'],
-};
-
-const ingredientPayload = {
-  _id: '639eea5a049fc933bddebab2',
-  name: 'ingredient 1',
-  category: 'category 1',
-  hasAllergens: true,
-  allergens: ['allergen1'],
-};
+const ingredientInput = createIngredientInput({});
+const ingredientPayload = createIngredientPayload({});
 
 afterEach(() => {
   jest.clearAllMocks();

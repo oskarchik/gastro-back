@@ -5,14 +5,11 @@ import request from 'supertest';
 import { redis } from 'src/utils/redis';
 import { createApp } from '../../../app';
 import * as AllergenService from '../allergens.service';
+import { createAllergenPayload } from './allergenMother';
 
 const app = createApp();
 
-const allergenPayload = {
-  _id: 'ee639a5a049fc933bddebab2',
-  name: 'test',
-  icon: 'test allergen icon',
-};
+const allergenPayload = createAllergenPayload({});
 
 afterEach(() => {
   jest.clearAllMocks();

@@ -5,17 +5,19 @@ import request from 'supertest';
 import { redis } from 'src/utils/redis';
 import { createApp } from '../../../app';
 import * as IngredientService from '../ingredients.service';
+import { createIngredientPayload } from './ingredientMother';
 
 const app = createApp();
 
-const ingredientPayload = {
-  _id: '639eea5a049fc933bddebab2',
-  name: 'ingredient 1',
-  category: 'eggs',
-  hasAllergens: true,
-  allergens: ['639eea5a049fc933bddebab3'],
-  allergenNames: ['celery'],
-};
+// const ingredientPayload = {
+//   _id: '639eea5a049fc933bddebab2',
+//   name: 'ingredient 1',
+//   category: 'eggs',
+//   hasAllergens: true,
+//   allergens: ['639eea5a049fc933bddebab3'],
+//   allergenNames: ['celery'],
+// };
+const ingredientPayload = createIngredientPayload({});
 
 const nameUpdateInput = 'updated';
 

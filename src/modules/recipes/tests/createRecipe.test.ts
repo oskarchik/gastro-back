@@ -4,32 +4,13 @@
 import request from 'supertest';
 import * as RecipesService from '../recipes.service';
 import { createApp } from 'src/app';
-import { RecipeInput } from '../recipes.model';
 import { redis } from 'src/utils/redis';
+import { createRecipeInput, createRecipePayload } from './recipesMother';
 
 const app = createApp();
 
-const recipeInput: RecipeInput = {
-  name: 'paella',
-  category: 'main',
-  subCategory: 'rice',
-  ingredients: ['639eea5a049fc933bddebab2'],
-  ingredientNames: ['rice', 'green beans', 'chicken'],
-  hasAllergens: false,
-  allergens: [],
-  allergenNames: [],
-};
-
-const recipePayload = {
-  _id: '639eea5a049fc933bddebab2',
-  name: 'paella',
-  subCategory: 'rice',
-  ingredients: ['639eea5a049fc933bddebab2'],
-  ingredientNames: ['rice', 'green beans', 'chicken'],
-  hasAllergens: false,
-  allergens: [],
-  allergenNames: [],
-};
+const recipeInput = createRecipeInput({});
+const recipePayload = createRecipePayload({});
 
 const baseApiUrl = '/api/v1/recipes';
 

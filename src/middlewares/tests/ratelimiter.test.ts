@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { redis } from 'src/utils/redis';
 import { Limiter } from 'src/types/types';
-import { rateLimiter } from './rateLimiter';
+import { rateLimiter } from '../rateLimiter';
 
 const IP_ADDRESS = '127.0.0.1';
 const mockRequest = {

@@ -23,7 +23,7 @@ module.exports = {
   moduleNameMapper: {
     'src/(.*)': '<rootDir>/src/$1',
   },
-  modulePathIgnorePatterns: ['<rootDir>/build', '<rootDir>/config'],
+  modulePathIgnorePatterns: ['<rootDir>/build', '<rootDir>/config', '<rootDir>/src/types'],
   forceExit: true,
   testTimeout: 10000,
 };

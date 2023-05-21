@@ -1,4 +1,4 @@
-import { isValidId } from './idValidation';
+import { isValidId } from '../idValidation';
 
 describe('id validation', () => {
   it('should return false when given id is not mongoose ObjectId', () => {

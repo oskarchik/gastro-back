@@ -1,4 +1,4 @@
-import { getRoute } from './getRoute';
+import { getRoute } from '../getRoute';
 
 describe('getRoute', () => {
   it('should return a string if baseUrl is provided', () => {

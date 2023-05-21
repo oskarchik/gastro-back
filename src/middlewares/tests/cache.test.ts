@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { redis } from 'src/utils/redis';
-import { cache } from './cache.middleware';
+import { cache } from '../cache.middleware';
 
 const mockRequest = {
   baseUrl: '/allergens',
