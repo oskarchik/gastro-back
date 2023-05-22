@@ -1,6 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
+import compression from 'compression';
 import { httpLogger } from './logger/httpLogger';
 import { Logger } from './logger/logger';
 import { errorHandler, isTrustedError } from './error/error-handler';
@@ -11,6 +12,7 @@ export const createApp = () => {
 
   app.use(helmet());
   app.use(cors());
+  app.use(compression());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(httpLogger);
