@@ -7,5 +7,6 @@ type Pagination = {
 declare namespace Express {
   export interface Request {
     pagination: Pagination;
+    requestId: string;
   }
 }

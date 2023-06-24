@@ -2,10 +2,12 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
+import { middleware as context } from 'express-http-context';
 import { httpLogger } from './logger/httpLogger';
 import { Logger } from './logger/logger';
 import { errorHandler, isTrustedError } from './error/error-handler';
 import { apiRouter } from './routes';
+import { requestIdMiddleware } from './middlewares/requestId.middleware';
 
 export const createApp = () => {
   const app = express();
@@ -15,6 +17,8 @@ export const createApp = () => {
   app.use(compression());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
+  app.use(context);
+  app.use(requestIdMiddleware);
   app.use(httpLogger);
 
   app.use('/api/v1', apiRouter);
