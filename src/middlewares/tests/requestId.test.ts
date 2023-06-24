@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { requestIdMiddleware } from '../requestId.middleware';
 
 const mockReq = {} as Request;
