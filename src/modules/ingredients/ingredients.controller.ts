@@ -97,7 +97,20 @@ export const findIngredientById = async (req: Request, res: Response, next: Next
 };
 
 export const makeIngredient = async (req: Request, res: Response, next: NextFunction) => {
-  const { name, category, hasAllergens, allergens, allergenNames } = req.body;
+  const {
+    name,
+    category,
+    hasAllergens,
+    allergens,
+    allergenNames,
+    description,
+    format,
+    price,
+    provider,
+    quantity,
+    unit,
+    yieldRevenue,
+  } = req.body;
 
   if (!name || hasAllergens === undefined) {
     return next(ApiError.badRequest('name and hasAllergens are required'));
@@ -110,6 +123,13 @@ export const makeIngredient = async (req: Request, res: Response, next: NextFunc
       hasAllergens,
       allergens,
       allergenNames,
+      description,
+      format,
+      price,
+      provider,
+      quantity,
+      unit,
+      yieldRevenue,
     });
 
     await deleteRedisKeys('ingredients');
