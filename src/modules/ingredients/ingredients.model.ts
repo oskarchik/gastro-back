@@ -94,7 +94,12 @@ const ingredientSchema = new Schema(
       },
     },
     price: {
-      type: Number,
+      grossPrice: {
+        type: Number,
+      },
+      netPrice: {
+        type: Number,
+      },
     },
     provider: {
       type: String,
