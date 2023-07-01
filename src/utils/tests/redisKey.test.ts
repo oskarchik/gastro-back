@@ -39,8 +39,8 @@ const DBDocument2 = {
 beforeEach(async () => {
   await redis.flushdb();
 });
-afterEach(() => {
-  redis.flushdb();
+afterEach(async () => {
+  await redis.flushdb();
 });
 
 afterAll(async () => {

@@ -20,6 +20,10 @@ const rateLimiterOptions: Limiter = {
   allowedRequests: 4,
 };
 
+beforeEach(() => {
+  jest.clearAllMocks();
+  redis.del(IP_ADDRESS);
+});
 afterEach(() => {
   jest.clearAllMocks();
   redis.del(IP_ADDRESS);
