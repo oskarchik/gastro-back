@@ -47,12 +47,30 @@ export interface AllergenDocument extends AllergenInput, mongoose.Document {
   updatedAt: Date;
 }
 
+export type Yield = {
+  grossWeight: number;
+  netWeight: number;
+  yield: number;
+};
+
+export type Price = {
+  grossPrice: number;
+  netPrice: number;
+};
+
 export interface IngredientInput {
   name: string;
-  category: string;
+  description?: string;
+  category?: string;
   hasAllergens: boolean;
   allergens: AllergenDocument['_id'][];
   allergenNames: string[];
+  format?: string;
+  quantity?: number;
+  unit?: string;
+  yieldRevenue?: Yield;
+  price?: Price;
+  provider?: string;
 }
 
 export interface IngredientDocument extends IngredientInput, mongoose.Document {
