@@ -3,6 +3,7 @@ import { rateLimiter } from './middlewares/rateLimiter';
 import { allergensRouter } from './modules/allergens/allergens.router';
 import { ingredientsRouter } from './modules/ingredients/ingredients.router';
 import { recipesRouter } from './modules/recipes/recipes.routes';
+import { httpLogger } from './logger/httpLogger';
 
 export const apiRouter = Router();
 
@@ -20,6 +21,7 @@ apiRouter.get(
   }
 );
 apiRouter.use(rateLimiter({ windowSize: 20, allowedRequests: 4 }));
+apiRouter.use(httpLogger);
 apiRouter.use('/allergens', allergensRouter);
 apiRouter.use('/ingredients', ingredientsRouter);
 apiRouter.use('/recipes', recipesRouter);

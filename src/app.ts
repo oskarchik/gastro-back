@@ -3,7 +3,6 @@ import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
 import { middleware as context } from 'express-http-context';
-import { httpLogger } from './logger/httpLogger';
 import { Logger } from './logger/logger';
 import { errorHandler, isTrustedError } from './error/error-handler';
 import { apiRouter } from './routes';
@@ -19,7 +18,6 @@ export const createApp = () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(context);
   app.use(requestIdMiddleware);
-  app.use(httpLogger);
 
   app.use('/api/v1', apiRouter);
 

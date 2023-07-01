@@ -6,6 +6,9 @@ components:
         name:
           type: string
           default: mustard
+        description:
+          type: string
+          default: description of the ingredient
         category:
           type: string
           default: sauces
@@ -22,6 +25,40 @@ components:
           items:
             type: string
           default: ['mustard']
+        format:
+          type: string
+          default: bottle
+        quantity:
+          type: number
+          default: 1
+        unit:
+          type: string
+          default: liters
+        yieldRevenue:
+          type: object
+          properties:
+            grossWeight:
+              type: number
+              default: 1
+            netWeight:
+              type: number
+              default: 1
+            yield:
+              type: number
+              default: 100
+        price:
+          type: object
+          properties:
+            grossPrice:
+              type: number
+              default: 1.21
+            netPrice:
+              type: number
+              default: 1
+        provider:
+          type: string
+          default: my provider
+
     CreateIngredientInput:
       allOf:
         - $ref: '#/components/schemas/Ingredient'
