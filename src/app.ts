@@ -19,7 +19,6 @@ export const createApp = () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(context);
   app.use(requestIdMiddleware);
-  app.use(httpLogger);
 
   app.use('/api/v1', apiRouter);
 
