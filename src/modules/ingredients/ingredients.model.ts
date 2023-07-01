@@ -10,6 +10,9 @@ const ingredientSchema = new Schema(
       required: true,
       unique: true,
     },
+    description: {
+      type: String,
+    },
     category: {
       type: String,
       enum: [
@@ -51,6 +54,50 @@ const ingredientSchema = new Schema(
         'sulphites',
         'lupin',
       ],
+    },
+    format: {
+      type: String,
+      enum: [
+        'without format',
+        'tray',
+        'bag',
+        'tin',
+        'bottle',
+        'brick',
+        'box',
+        'carafe',
+        'mesh bag',
+        'bunch',
+        'pack',
+        'piece',
+        'roll',
+        'sack',
+        'other',
+      ],
+    },
+    quantity: {
+      type: Number,
+    },
+    unit: {
+      type: String,
+      enum: ['kilogram', 'grams', 'liters', 'milliliters', 'units'],
+    },
+    yieldRevenue: {
+      grossWeight: {
+        type: Number,
+      },
+      netWeight: {
+        type: Number,
+      },
+      yield: {
+        type: Number,
+      },
+    },
+    price: {
+      type: Number,
+    },
+    provider: {
+      type: String,
     },
   },
   { timestamps: true }
