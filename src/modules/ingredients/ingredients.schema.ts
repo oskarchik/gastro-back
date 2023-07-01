@@ -37,22 +37,58 @@ const payload = {
     name: z.string({
       required_error: 'Name is required',
     }),
+    description: z.string().optional(),
     category: z.enum(categoryNames).optional(),
     hasAllergens: z.boolean({
       required_error: 'Please define if the ingredient contains allergens',
     }),
     allergens: z.array(z.string()).optional(),
     allergenNames: z.array(z.enum(allergenNames)).optional(),
+    format: z.string().optional(),
+    quantity: z.number().optional(),
+    unit: z.string().optional(),
+    yieldRevenue: z
+      .object({
+        grossWeight: z.number().optional(),
+        netWeight: z.number().optional(),
+        yield: z.number().optional(),
+      })
+      .optional(),
+    price: z
+      .object({
+        grossPrice: z.number().optional(),
+        netPrice: z.number().optional(),
+      })
+      .optional(),
+    provider: z.string().optional(),
   }),
 };
 
 const updatePayload = {
   body: z.object({
     name: z.string().optional(),
+    description: z.string().optional(),
     category: z.enum(categoryNames).optional(),
     hasAllergens: z.boolean().optional(),
     allergens: z.array(z.string()).optional(),
     allergenNames: z.array(z.enum(allergenNames)).optional(),
+    format: z.string().optional(),
+    quantity: z.number().optional(),
+    unit: z.string().optional(),
+    yieldRevenue: z
+      .object({
+        grossWeight: z.number().optional(),
+        netWeight: z.number().optional(),
+        yield: z.number().optional(),
+      })
+      .optional(),
+    price: z
+      .object({
+        grossPrice: z.number().optional(),
+        netPrice: z.number().optional(),
+      })
+      .optional(),
+    provider: z.string().optional(),
   }),
 };
 
