@@ -18,6 +18,7 @@ import {
   updateIngredientSchema,
 } from './ingredients.schema';
 import { cache } from 'src/middlewares/cache.middleware';
+import { idValidator } from 'src/middlewares/idValidation.middleware';
 
 export const ingredientsRouter = Router();
 
@@ -28,11 +29,22 @@ ingredientsRouter.get(
   cache,
   findIngredients
 );
-ingredientsRouter.get('/:id', validate(getIngredientByIdSchema), cache, findIngredientById);
+ingredientsRouter.get(
+  '/:id',
+  validate(getIngredientByIdSchema),
+  idValidator,
+  cache,
+  findIngredientById
+);
 
 ingredientsRouter.post('/', validate(createIngredientSchema), makeIngredient);
 
 ingredientsRouter.delete('/', validate(deleteIngredientSchema), deleteAllIngredients);
-ingredientsRouter.delete('/:id', validate(deleteIngredientByIdSchema), deleteIngredientById);
+ingredientsRouter.delete(
+  '/:id',
+  validate(deleteIngredientByIdSchema),
+  idValidator,
+  deleteIngredientById
+);
 
-ingredientsRouter.patch('/:id', validate(updateIngredientSchema), patchIngredient);
+ingredientsRouter.patch('/:id', validate(updateIngredientSchema), idValidator, patchIngredient);
