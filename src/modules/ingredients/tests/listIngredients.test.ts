@@ -7,6 +7,7 @@ import { redis } from 'src/utils/redis';
 import * as IngredientsService from '../ingredients.service';
 import { createApp } from '../../../app';
 import { createIngredientInput, createIngredientPayload } from './ingredientMother';
+import { ApiError } from 'src/error/ApiError';
 
 const app = createApp();
 
@@ -165,7 +166,7 @@ describe('HAPPY PATH', () => {
 
         expect(statusCode).toBe(500);
         expect(body.error).toBeTruthy();
-        expect(body.error).toMatch(/unexpected internal error/i);
+        expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
         expect(getIngredientsServiceMock).toHaveBeenCalledTimes(1);
       });
     });
@@ -179,7 +180,7 @@ describe('HAPPY PATH', () => {
         .query({ allergenNames: 'mustard' });
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(getIngredientsByAllergenServiceMock).toHaveBeenCalledTimes(1);
     });
     describe('invalid id while getting ingredients by id', () => {
@@ -212,7 +213,7 @@ describe('HAPPY PATH', () => {
         );
 
         expect(statusCode).toBe(500);
-        expect(body.error).toMatch(/unexpected internal error/i);
+        expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
         expect(getIngredientByIdServiceMock).toHaveBeenNthCalledWith(1, ingredientPayload._id);
       });
     });

@@ -6,6 +6,7 @@ import { redis } from 'src/utils/redis';
 import * as IngredientsService from '../ingredients.service';
 import { createApp } from '../../../app';
 import { createIngredientPayload } from './ingredientMother';
+import { ApiError } from 'src/error/ApiError';
 
 const app = createApp();
 
@@ -109,7 +110,7 @@ describe('UNHAPPY PATH', () => {
       const { statusCode, body } = await request(app).delete(baseApiUrl);
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(deleteIngredientsServiceMock).toHaveBeenNthCalledWith(1, {});
     });
     it('should return 500 error while deleting ingredient by id', async () => {
@@ -121,7 +122,7 @@ describe('UNHAPPY PATH', () => {
       );
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(deleteIngredientByIdServiceMock).toHaveBeenNthCalledWith(1, ingredientPayload._id);
     });
   });
@@ -147,7 +148,7 @@ describe('UNHAPPY PATH', () => {
       );
 
       expect(statusCode).toBe(404);
-      expect(body.error).toMatch(/ingredient not found to delete/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_NOT_FOUND_MESSAGE);
       expect(deleteIngredientByIdServiceMock).toHaveBeenNthCalledWith(
         1,
         '639eea5a049fc933bddebab1'

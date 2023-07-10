@@ -6,6 +6,7 @@ import { redis } from 'src/utils/redis';
 import { createApp } from '../../../app';
 import * as IngredientService from '../ingredients.service';
 import { createIngredientInput, createIngredientPayload } from './ingredientMother';
+import { ApiError } from 'src/error/ApiError';
 
 const app = createApp();
 
@@ -50,7 +51,7 @@ describe('UNHAPPY PATH', () => {
       const { statusCode, body } = await request(app).post(baseApiUrl).send(ingredientInput);
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(createIngredientServiceMock).toHaveBeenNthCalledWith(1, ingredientInput);
     });
   });
