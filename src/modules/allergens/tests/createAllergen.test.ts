@@ -6,6 +6,7 @@ import { redis } from 'src/utils/redis';
 import { createApp } from '../../../app';
 import * as AllergenService from '../allergens.service';
 import { createAllergenInput, createAllergenPayload } from './allergenMother';
+import { ApiError } from 'src/error/ApiError';
 
 const app = createApp();
 
@@ -57,7 +58,7 @@ describe('allergens', () => {
 
       expect(statusCode).toBe(500);
       expect(body.error).toBeTruthy();
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(createAllergenServiceMock).toHaveBeenCalledTimes(1);
     });
   });
