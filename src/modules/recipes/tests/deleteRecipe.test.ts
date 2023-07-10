@@ -5,6 +5,7 @@ import request from 'supertest';
 import { redis } from 'src/utils/redis';
 import * as RecipeService from '../recipes.service';
 import { createApp } from '../../../app';
+import { ApiError } from 'src/error/ApiError';
 
 const app = createApp();
 
@@ -86,7 +87,7 @@ describe('UNHAPPY PATH', () => {
         .query({ category: 'main' });
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(deleteRecipesServiceMock).toHaveBeenNthCalledWith(1, { category: 'main' });
     });
     it('should return 500 when deleting recipe by id', async () => {
@@ -96,7 +97,7 @@ describe('UNHAPPY PATH', () => {
       const { statusCode, body } = await request(app).delete(`${baseApiUrl}/${recipePayload._id}`);
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(deleteRecipeByIdServiceMock).toHaveBeenNthCalledWith(1, recipePayload._id);
     });
   });
