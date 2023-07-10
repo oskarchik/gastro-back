@@ -1,6 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import mongoose from 'mongoose';
-import { isValidId } from 'src/utils/idValidation';
 import { getPaginatedData } from 'src/middlewares/pagination.middleware';
 import { filterProperties } from 'src/utils/filterProperties';
 import { Metadata, AllergenDocument } from 'src/types/types';
@@ -70,10 +68,6 @@ export const findAllergens = async (req: Request, res: Response, next: NextFunct
 export const findAllergenById = async (req: Request, res: Response, next: NextFunction) => {
   const allergenId = req.params.id;
 
-  if (!isValidId(allergenId)) {
-    return next(ApiError.badRequest('Invalid id'));
-  }
-
   try {
     const foundAllergen = await getAllergenById(allergenId);
 
@@ -105,10 +99,6 @@ export const makeAllergen = async (req: Request, res: Response, next: NextFuncti
 
 export const patchAllergen = async (req: Request, res: Response, next: NextFunction) => {
   const allergenId = req.params.id;
-
-  if (!mongoose.Types.ObjectId.isValid(allergenId)) {
-    return next(ApiError.badRequest('Invalid id'));
-  }
 
   const update = {
     name: req.body.name,
@@ -160,10 +150,6 @@ export const deleteAllAllergens = async (req: Request, res: Response, next: Next
 
 export const deleteAllergenById = async (req: Request, res: Response, next: NextFunction) => {
   const allergenId = req.params.id;
-
-  if (!mongoose.Types.ObjectId.isValid(allergenId)) {
-    return next(ApiError.badRequest('Invalid id'));
-  }
 
   try {
     const deletedAllergen = await removeAllergenById(allergenId);

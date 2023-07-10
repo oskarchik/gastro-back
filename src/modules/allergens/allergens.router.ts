@@ -18,16 +18,17 @@ import {
   deleteAllergenSchema,
   deleteAllergenByIdSchema,
 } from './allergens.schema';
+import { idValidator } from 'src/middlewares/idValidation.middleware';
 
 export const allergensRouter = Router();
 
-allergensRouter.get('/:id', validate(getAllergensByIdSchema), cache, findAllergenById);
+allergensRouter.get('/:id', validate(getAllergensByIdSchema), idValidator, cache, findAllergenById);
 allergensRouter.get('/', validate(getAllergenSchema), cache, paginationMiddleware(), findAllergens);
 
 allergensRouter.post('/', validate(creteAllergenSchema), makeAllergen);
 
-allergensRouter.patch('/:id', validate(updateAllergenSchema), patchAllergen);
+allergensRouter.patch('/:id', validate(updateAllergenSchema), idValidator, patchAllergen);
 
 allergensRouter.delete('/', validate(deleteAllergenSchema), deleteAllAllergens);
-allergensRouter.delete('/:id', validate(deleteAllergenByIdSchema), deleteAllergenById);
+allergensRouter.delete('/:id', validate(deleteAllergenByIdSchema), idValidator, deleteAllergenById);
 // allergensRouter.delete('/:name', removeAllergenByName);
