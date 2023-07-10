@@ -1,5 +1,8 @@
 import { Router } from 'express';
 import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
+import { cache } from 'src/middlewares/cache.middleware';
+import { validate } from 'src/middlewares/validationRequest';
+import { idValidator } from 'src/middlewares/idValidation.middleware';
 import {
   findRecipeById,
   findRecipes,
@@ -8,8 +11,6 @@ import {
   deleteRecipeById,
   patchRecipe,
 } from './recipes.controller';
-import { cache } from 'src/middlewares/cache.middleware';
-import { validate } from 'src/middlewares/validationRequest';
 import {
   createRecipeSchema,
   deleteRecipeByIdSchema,
@@ -21,11 +22,11 @@ import {
 export const recipesRouter = Router();
 
 recipesRouter.get('/', validate(getRecipeSchema), cache, paginationMiddleware(), findRecipes);
-recipesRouter.get('/:id', validate(getRecipeSchema), cache, findRecipeById);
+recipesRouter.get('/:id', validate(getRecipeSchema), idValidator, cache, findRecipeById);
 
 recipesRouter.post('/', validate(createRecipeSchema), makeRecipe);
 
 recipesRouter.delete('/', validate(deleteRecipeSchema), deleteRecipes);
-recipesRouter.delete('/:id', validate(deleteRecipeByIdSchema), deleteRecipeById);
+recipesRouter.delete('/:id', validate(deleteRecipeByIdSchema), idValidator, deleteRecipeById);
 
-recipesRouter.patch('/:id', validate(updateRecipeSchema), patchRecipe);
+recipesRouter.patch('/:id', validate(updateRecipeSchema), idValidator, patchRecipe);

@@ -3,6 +3,7 @@
 
 import request from 'supertest';
 import { redis } from 'src/utils/redis';
+import { ApiError } from 'src/error/ApiError';
 import { createApp } from '../../../app';
 import * as AllergenService from '../allergens.service';
 import { createAllergenInput, createAllergenPayload } from './allergenMother';
@@ -57,7 +58,7 @@ describe('allergens', () => {
 
       expect(statusCode).toBe(500);
       expect(body.error).toBeTruthy();
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(createAllergenServiceMock).toHaveBeenCalledTimes(1);
     });
   });

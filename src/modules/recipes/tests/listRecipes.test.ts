@@ -4,6 +4,7 @@ import request from 'supertest';
 import { Model, Query } from 'mongoose';
 import { redis } from 'src/utils/redis';
 import { createApp } from 'src/app';
+import { ApiError } from 'src/error/ApiError';
 import * as RecipesService from '../recipes.service';
 
 const app = createApp();
@@ -134,7 +135,7 @@ describe('UNHAPPY PATH', () => {
       const { statusCode, body } = await request(app).get(baseApiUrl);
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(getRecipesServiceMock).toHaveBeenNthCalledWith(
         1,
         {},
@@ -151,7 +152,7 @@ describe('UNHAPPY PATH', () => {
       const { statusCode, body } = await request(app).get(baseApiUrl).query({ name: 'pa' });
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(getRecipesWithNameServiceMock).toHaveBeenNthCalledWith(1, /pa/, {
         page: 1,
         limit: 10,
@@ -167,7 +168,7 @@ describe('UNHAPPY PATH', () => {
         .query({ allergenNames: ['fish'] });
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(getRecipesByAllergenServiceMock).toHaveBeenNthCalledWith(1, ['fish'], {
         page: 1,
         limit: 10,
@@ -181,7 +182,7 @@ describe('UNHAPPY PATH', () => {
       const { statusCode, body } = await request(app).get(`${baseApiUrl}/${recipePayload._id}`);
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(getRecipesByIdServiceMock).toHaveBeenNthCalledWith(1, recipePayload._id);
     });
 

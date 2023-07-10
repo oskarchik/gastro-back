@@ -3,6 +3,7 @@
 
 import request from 'supertest';
 import { redis } from 'src/utils/redis';
+import { ApiError } from 'src/error/ApiError';
 import { createApp } from '../../../app';
 import * as RecipesService from '../recipes.service';
 
@@ -61,7 +62,7 @@ describe('HAPPY PATH', () => {
         .send({ category: 'main' });
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(updateRecipesServiceMock).toHaveBeenNthCalledWith(1, {
         recipeId: recipePayload._id,
         update: { category: 'main' },

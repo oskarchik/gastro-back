@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ApiError } from 'src/error/ApiError';
 import { filterProperties } from 'src/utils/filterProperties';
-import { isValidId } from 'src/utils/idValidation';
 import { redis } from 'src/utils/redis';
 import {
   createRedisKey,
@@ -105,10 +104,6 @@ export const findRecipes = async (req: Request, res: Response, next: NextFunctio
 export const findRecipeById = async (req: Request, res: Response, next: NextFunction) => {
   const recipeId = req.params.id;
 
-  if (!isValidId(recipeId)) {
-    return next(ApiError.badRequest('Invalid id'));
-  }
-
   try {
     const foundRecipe = await getRecipeById(recipeId);
 
@@ -184,10 +179,6 @@ export const deleteRecipes = async (req: Request, res: Response, next: NextFunct
 export const deleteRecipeById = async (req: Request, res: Response, next: NextFunction) => {
   const recipeId = req.params.id;
 
-  if (!isValidId(recipeId)) {
-    return next(ApiError.badRequest('Invalid id'));
-  }
-
   try {
     const deletedRecipe = await removeRecipeById(recipeId);
 
@@ -204,10 +195,6 @@ export const deleteRecipeById = async (req: Request, res: Response, next: NextFu
 
 export const patchRecipe = async (req: Request, res: Response, next: NextFunction) => {
   const recipeId = req.params.id;
-
-  if (!isValidId(recipeId)) {
-    return next(ApiError.badRequest('Invalid id'));
-  }
 
   const update = req.body;
 

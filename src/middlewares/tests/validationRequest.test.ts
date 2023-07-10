@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Request, Response, NextFunction } from 'express';
 import { AnyZodObject } from 'zod';
-import { validate } from '../validationRequest';
 import { getAllergenSchema } from 'src/modules/allergens/allergens.schema';
+import { ApiError } from 'src/error/ApiError';
+import { validate } from '../validationRequest';
 
 const mockRequest = {
   baseUrl: '/allergens',
@@ -44,7 +45,7 @@ describe('validation request', () => {
   it('should call next with ApiError.badRequest', async () => {
     const schema = validate({} as AnyZodObject);
 
-    const error = new Error('Bad request');
+    const error = new Error(ApiError.DEFAULT_BAD_REQUEST_MESSAGE);
 
     await schema(mockRequest, mockResponse, mockNext);
 

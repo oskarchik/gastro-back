@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { rateLimiter } from './middlewares/rateLimiter';
 import { allergensRouter } from './modules/allergens/allergens.router';
 import { ingredientsRouter } from './modules/ingredients/ingredients.router';
-import { recipesRouter } from './modules/recipes/recipes.routes';
+import { recipesRouter } from './modules/recipes/recipes.router';
 import { httpLogger } from './logger/httpLogger';
 
 export const apiRouter = Router();

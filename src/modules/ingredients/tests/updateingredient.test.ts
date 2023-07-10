@@ -3,6 +3,7 @@
 
 import request from 'supertest';
 import { redis } from 'src/utils/redis';
+import { ApiError } from 'src/error/ApiError';
 import { createApp } from '../../../app';
 import * as IngredientService from '../ingredients.service';
 import { createIngredientPayload } from './ingredientMother';
@@ -58,7 +59,7 @@ describe('UNHAPPY PATH', () => {
         .send({ name: nameUpdateInput });
 
       expect(statusCode).toBe(500);
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(updateIngredientServiceMock).toHaveBeenNthCalledWith(1, {
         ingredientId: ingredientPayload._id,
         update: { name: nameUpdateInput },
@@ -91,7 +92,7 @@ describe('UNHAPPY PATH', () => {
         .send({ name: nameUpdateInput });
 
       expect(statusCode).toBe(404);
-      expect(body.error).toMatch(/ingredient not found to update/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_NOT_FOUND_MESSAGE);
       expect(updateIngredientServiceMock).toHaveBeenNthCalledWith(1, {
         ingredientId: '639eea5a049fc933bddebab3',
         update: { name: nameUpdateInput },

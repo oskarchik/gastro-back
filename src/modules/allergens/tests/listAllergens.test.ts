@@ -4,6 +4,7 @@
 import request from 'supertest';
 import { Model, Query } from 'mongoose';
 import { redis } from 'src/utils/redis';
+import { ApiError } from 'src/error/ApiError';
 import { createApp } from '../../../app';
 import * as AllergenService from '../allergens.service';
 import { createAllergenPayload } from './allergenMother';
@@ -127,7 +128,7 @@ describe('UNHAPPY PATH', () => {
         .query({ name: 'test' });
       expect(statusCode).toBe(500);
       expect(body.error).toBeTruthy();
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(getAllergenByNameServiceMock).toHaveBeenCalledTimes(1);
     });
   });
@@ -157,7 +158,7 @@ describe('UNHAPPY PATH', () => {
       );
       expect(statusCode).toBe(500);
       expect(body.error).toBeTruthy();
-      expect(body.error).toMatch(/unexpected internal error/i);
+      expect(body.error).toMatch(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
       expect(getAllergenByIdServiceMock).toHaveBeenCalledTimes(1);
     });
 

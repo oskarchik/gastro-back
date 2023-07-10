@@ -15,6 +15,6 @@ export const validate =
         }));
         return res.status(400).send({ error: formattedErrors });
       }
-      return next(ApiError.badRequest('Bad request'));
+      return next(ApiError.badRequest());
     }
   };

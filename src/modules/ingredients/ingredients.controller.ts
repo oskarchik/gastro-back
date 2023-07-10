@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { filterProperties } from 'src/utils/filterProperties';
-import { isValidId } from 'src/utils/idValidation';
 import { redis } from 'src/utils/redis';
 import { ApiError } from '../../error/ApiError';
 import {
@@ -76,10 +75,6 @@ export const findIngredients = async (req: Request, res: Response, next: NextFun
 
 export const findIngredientById = async (req: Request, res: Response, next: NextFunction) => {
   const ingredientId = req.params.id;
-
-  if (!isValidId(ingredientId)) {
-    return next(ApiError.badRequest('Invalid id'));
-  }
 
   try {
     const foundIngredient = await getIngredientById(ingredientId);
@@ -159,15 +154,11 @@ export const deleteAllIngredients = async (req: Request, res: Response, next: Ne
 export const deleteIngredientById = async (req: Request, res: Response, next: NextFunction) => {
   const ingredientId = req.params.id;
 
-  if (!isValidId(ingredientId)) {
-    return next(ApiError.badRequest('Invalid id'));
-  }
-
   try {
-    const deletedIngredient = await removeIngredientById(ingredientId);
+    const result = await removeIngredientById(ingredientId);
 
-    if (deletedIngredient === null) {
-      return next(ApiError.notFound('Ingredient not found to delete'));
+    if (result === null) {
+      return next(ApiError.notFound());
     }
 
     return res.status(200).send({ message: `Deleted ingredient ${ingredientId}` });
@@ -178,18 +169,13 @@ export const deleteIngredientById = async (req: Request, res: Response, next: Ne
 
 export const patchIngredient = async (req: Request, res: Response, next: NextFunction) => {
   const ingredientId = req.params.id;
-
-  if (!isValidId(ingredientId)) {
-    return next(ApiError.badRequest('Invalid id'));
-  }
-
   const update = req.body;
 
   try {
     const updatedIngredient = await updateIngredient({ ingredientId, update });
 
     if (updatedIngredient === null) {
-      return next(ApiError.notFound('Ingredient not found to update'));
+      return next(ApiError.notFound());
     }
 
     await updateRedisKeys({
