@@ -17,7 +17,7 @@ describe('ApiError', () => {
       const { httpCode, isOperational, message } = ApiError.badRequest('bad request');
       expect(httpCode).toEqual(400);
       expect(isOperational).toEqual(true);
-      expect(message).toEqual('bad request');
+      expect(message).toEqual(`${ApiError.DEFAULT_BAD_REQUEST_MESSAGE} bad request`);
     });
   });
   describe('unauthorized', () => {
@@ -25,7 +25,7 @@ describe('ApiError', () => {
       const { httpCode, isOperational, message } = ApiError.unauthorized('unauthorized');
       expect(httpCode).toEqual(401);
       expect(isOperational).toEqual(true);
-      expect(message).toEqual('unauthorized');
+      expect(message).toEqual(`${ApiError.DEFAULT_UNAUTHORIZED_MESSAGE} unauthorized`);
     });
   });
   describe('forbidden', () => {
@@ -33,23 +33,23 @@ describe('ApiError', () => {
       const { httpCode, isOperational, message } = ApiError.forbidden('forbidden');
       expect(httpCode).toEqual(403);
       expect(isOperational).toEqual(true);
-      expect(message).toEqual('forbidden');
+      expect(message).toEqual(`${ApiError.DEFAULT_FORBIDDEN_MESSAGE} forbidden`);
     });
   });
   describe('not found', () => {
     it('should return 404', () => {
-      const { httpCode, isOperational, message } = ApiError.notFound('not found');
+      const { httpCode, isOperational, message } = ApiError.notFound('ingredient 1');
       expect(httpCode).toEqual(404);
       expect(isOperational).toEqual(true);
-      expect(message).toEqual('not found');
+      expect(message).toEqual(`${ApiError.DEFAULT_NOT_FOUND_MESSAGE} ingredient 1`);
     });
   });
   describe('internal', () => {
     it('should return 500', () => {
-      const { httpCode, isOperational, message } = ApiError.internalError('internal error');
+      const { httpCode, isOperational, message } = ApiError.internalError();
       expect(httpCode).toEqual(500);
       expect(isOperational).toEqual(true);
-      expect(message).toEqual('internal error');
+      expect(message).toEqual(ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE);
     });
   });
   describe('ApiError is instance of BaseError', () => {
@@ -78,12 +78,14 @@ describe('error handler', () => {
 
     errorHandler(mockError, mockRequest, mockResponse, mockNext);
     expect(mockResponse.status).toHaveBeenCalledWith(500);
-    expect(mockResponse.send).toHaveBeenCalledWith({ error: 'Unexpected internal error' });
+    expect(mockResponse.send).toHaveBeenCalledWith({
+      error: `${ApiError.DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE}`,
+    });
     expect(mockNext).not.toHaveBeenCalled();
     expect(Logger.error).not.toHaveBeenCalled();
   });
   it('should return 400 and bad request message', () => {
-    const mockApiError = ApiError.badRequest('bad request');
+    const mockApiError = ApiError.badRequest('Bad request');
     const mockRequest = {} as Request;
     const mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -94,7 +96,9 @@ describe('error handler', () => {
 
     errorHandler(mockApiError, mockRequest, mockResponse, mockNext);
     expect(mockResponse.status).toHaveBeenCalledWith(400);
-    expect(mockResponse.send).toHaveBeenCalledWith({ error: 'bad request' });
+    expect(mockResponse.send).toHaveBeenCalledWith({
+      error: `${ApiError.DEFAULT_BAD_REQUEST_MESSAGE} Bad request`,
+    });
     expect(mockNext).not.toHaveBeenCalled();
     expect(Logger.error).not.toHaveBeenCalled();
   });
