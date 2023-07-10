@@ -2,11 +2,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import request from 'supertest';
-import * as RecipesService from '../recipes.service';
 import { createApp } from 'src/app';
 import { redis } from 'src/utils/redis';
-import { createRecipeInput, createRecipePayload } from './recipesMother';
 import { ApiError } from 'src/error/ApiError';
+import { createRecipeInput, createRecipePayload } from './recipesMother';
+import * as RecipesService from '../recipes.service';
 
 const app = createApp();
 

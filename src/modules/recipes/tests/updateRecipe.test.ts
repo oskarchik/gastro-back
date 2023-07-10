@@ -3,9 +3,9 @@
 
 import request from 'supertest';
 import { redis } from 'src/utils/redis';
+import { ApiError } from 'src/error/ApiError';
 import { createApp } from '../../../app';
 import * as RecipesService from '../recipes.service';
-import { ApiError } from 'src/error/ApiError';
 
 const app = createApp();
 

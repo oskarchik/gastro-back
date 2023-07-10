@@ -3,10 +3,10 @@
 
 import request from 'supertest';
 import { redis } from 'src/utils/redis';
+import { ApiError } from 'src/error/ApiError';
 import * as IngredientsService from '../ingredients.service';
 import { createApp } from '../../../app';
 import { createIngredientPayload } from './ingredientMother';
-import { ApiError } from 'src/error/ApiError';
 
 const app = createApp();
 

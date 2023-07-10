@@ -1,5 +1,8 @@
 import { Router } from 'express';
 import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
+import { cache } from 'src/middlewares/cache.middleware';
+import { validate } from 'src/middlewares/validationRequest';
+import { idValidator } from 'src/middlewares/idValidation.middleware';
 import {
   findRecipeById,
   findRecipes,
@@ -8,9 +11,6 @@ import {
   deleteRecipeById,
   patchRecipe,
 } from './recipes.controller';
-import { cache } from 'src/middlewares/cache.middleware';
-import { validate } from 'src/middlewares/validationRequest';
-import { idValidator } from 'src/middlewares/idValidation.middleware';
 import {
   createRecipeSchema,
   deleteRecipeByIdSchema,

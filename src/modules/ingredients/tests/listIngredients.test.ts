@@ -4,10 +4,10 @@
 import request from 'supertest';
 import { Model } from 'mongoose';
 import { redis } from 'src/utils/redis';
+import { ApiError } from 'src/error/ApiError';
 import * as IngredientsService from '../ingredients.service';
 import { createApp } from '../../../app';
 import { createIngredientInput, createIngredientPayload } from './ingredientMother';
-import { ApiError } from 'src/error/ApiError';
 
 const app = createApp();
 

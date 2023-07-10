@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { validate } from 'src/middlewares/validationRequest';
 import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
+import { cache } from 'src/middlewares/cache.middleware';
+import { idValidator } from 'src/middlewares/idValidation.middleware';
 import {
   deleteAllIngredients,
   deleteIngredientById,
@@ -17,8 +19,6 @@ import {
   getIngredientSchema,
   updateIngredientSchema,
 } from './ingredients.schema';
-import { cache } from 'src/middlewares/cache.middleware';
-import { idValidator } from 'src/middlewares/idValidation.middleware';
 
 export const ingredientsRouter = Router();
 

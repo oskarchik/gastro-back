@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { paginationMiddleware } from 'src/middlewares/pagination.middleware';
 import { cache } from 'src/middlewares/cache.middleware';
 import { validate } from 'src/middlewares/validationRequest';
+import { idValidator } from 'src/middlewares/idValidation.middleware';
 import {
   findAllergens,
   findAllergenById,
@@ -18,7 +19,6 @@ import {
   deleteAllergenSchema,
   deleteAllergenByIdSchema,
 } from './allergens.schema';
-import { idValidator } from 'src/middlewares/idValidation.middleware';
 
 export const allergensRouter = Router();
 

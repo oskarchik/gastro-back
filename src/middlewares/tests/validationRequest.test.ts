@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Request, Response, NextFunction } from 'express';
 import { AnyZodObject } from 'zod';
-import { validate } from '../validationRequest';
 import { getAllergenSchema } from 'src/modules/allergens/allergens.schema';
 import { ApiError } from 'src/error/ApiError';
+import { validate } from '../validationRequest';
 
 const mockRequest = {
   baseUrl: '/allergens',

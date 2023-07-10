@@ -4,8 +4,8 @@ import request from 'supertest';
 import { Model, Query } from 'mongoose';
 import { redis } from 'src/utils/redis';
 import { createApp } from 'src/app';
-import * as RecipesService from '../recipes.service';
 import { ApiError } from 'src/error/ApiError';
+import * as RecipesService from '../recipes.service';
 
 const app = createApp();
 
