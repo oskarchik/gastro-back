@@ -20,7 +20,7 @@ export const getIngredients = async (
 
 export const getIngredientById = async (id: IngredientDocument['_id']) => {
   try {
-    return IngredientModel.findById(id).select(fieldsToReturn);
+    return await IngredientModel.findById(id).select(fieldsToReturn);
   } catch (error) {
     return error;
   }
